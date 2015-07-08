@@ -15,7 +15,7 @@ int main(void)
   DDRD = 0xff;
 
   while(1) {
-    PORTB ^= 1;
+    PORTD ^= 0xff;
   }
 
   return 0;

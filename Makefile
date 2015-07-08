@@ -8,9 +8,9 @@ TARGET			= main
 
 
 CC = avr-gcc
-CFLAGS = -c -Wall -g -Os	-DF_CPU=$(CLOCK) -DBAUD=$(BAUD) -DOFFSET=$(OFFSET) -mmcu=$(DEVICE)
+CFLAGS = -c -Wall -g -Os	-DF_CPU=$(CLOCK) -DBAUD=$(BAUD) -DOFFSET=$(OFFSET) -mmcu=$(DEVICE) -ffunction-sections -fdata-sections
 LD = $(CC)
-LDFLAGS = #-Wl,--section-start=.foo=$(OFFSET)
+LDFLAGS = -Wl,--gc-sections #-Wl,--section-start=.foo=$(OFFSET)
 
 
 
