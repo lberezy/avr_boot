@@ -5,6 +5,8 @@
 #define BAUD 9600
 #endif
 
+#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)
+
 #include <avr/io.h>
 #include <util/setbaud.h>
 #include <stdio.h>

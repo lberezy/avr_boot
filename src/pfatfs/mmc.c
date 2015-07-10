@@ -4,12 +4,15 @@
 
 #include "pff.h"
 #include "diskio.h"
+#include "../spi.h"
 
 /*-------------------------------------------------------------------------*/
 /* Platform dependent macros and functions needed to be modified           */
 /*-------------------------------------------------------------------------*/
 
 #include <avr/io.h>			/* Device include file */
+#include <util/delay.h>
+
 
 #define SPI_CS PB2
 #define SPI_SCK PB5
@@ -22,12 +25,8 @@
 #define SELECT()	SPI_PORT &= ~_BV(SPI_CS) /* CS = L */
 #define	DESELECT()	SPI_PORT |= _BV(SPI_CS) /* CS = H */
 #define	MMC_SEL		!(SPI_PORT & _BV(SPI_CS)) /* CS status (true:CS == L) */
-#define	FORWARD(d)	uart_putc(d) /* Data forwarding function (Console out in this example) */
+/*#define	FORWARD(d)	uart_putc(d) /* Data forwarding function (Console out in this example) */
 
-void init_spi (void);		/* Initialize SPI port (usi.S) */
-void dly_100us (void);		/* Delay 100 microseconds (usi.S) */
-void xmit_spi (BYTE d);		/* Send a byte to the MMC (usi.S) */
-BYTE rcv_spi (void);		/* Send a 0xFF to the MMC and get the received byte (usi.S) */
 
 
 /*--------------------------------------------------------------------------
@@ -80,25 +79,25 @@ BYTE send_cmd (
 
 	/* Select the card */
 	DESELECT();
-	rcv_spi();
+	spi_send(0xff);
 	SELECT();
-	rcv_spi();
+	spi_send(0xff);
 
 	/* Send a command packet */
-	xmit_spi(cmd);						/* Start + Command index */
-	xmit_spi((BYTE)(arg >> 24));		/* Argument[31..24] */
-	xmit_spi((BYTE)(arg >> 16));		/* Argument[23..16] */
-	xmit_spi((BYTE)(arg >> 8));			/* Argument[15..8] */
-	xmit_spi((BYTE)arg);				/* Argument[7..0] */
+	spi_send(cmd);						/* Start + Command index */
+	spi_send((BYTE)(arg >> 24));		/* Argument[31..24] */
+	spi_send((BYTE)(arg >> 16));		/* Argument[23..16] */
+	spi_send((BYTE)(arg >> 8));			/* Argument[15..8] */
+	spi_send((BYTE)arg);				/* Argument[7..0] */
 	n = 0x01;							/* Dummy CRC + Stop */
 	if (cmd == CMD0) n = 0x95;			/* Valid CRC for CMD0(0) */
 	if (cmd == CMD8) n = 0x87;			/* Valid CRC for CMD8(0x1AA) */
-	xmit_spi(n);
+	spi_send(n);
 
 	/* Receive a command response */
 	n = 10;								/* Wait for a valid response in timeout of 10 attempts */
 	do {
-		res = rcv_spi();
+		res = spi_send(0xff);
 	} while ((res & 0x80) && --n);
 
 	return res;			/* Return with the response value */
@@ -122,21 +121,23 @@ DSTATUS disk_initialize (void)
 	BYTE n, cmd, ty, ocr[4];
 	UINT tmr;
 
+	SPI_DDR |= _BV(SPI_CS);
+
 #if _USE_WRITE
 	if (CardType && MMC_SEL) disk_writep(0, 0);	/* Finalize write process if it is in progress */
 #endif
-	init_spi();		/* Initialize ports to control MMC */
+	spi_init(0, 1, 0, 3, 0);		/* Initialize ports to control MMC */
 	DESELECT();
-	for (n = 10; n; n--) rcv_spi();	/* 80 dummy clocks with CS=H */
+	for (n = 10; n; n--) spi_send(0xff);	/* 80 dummy clocks with CS=H */
 
 	ty = 0;
 	if (send_cmd(CMD0, 0) == 1) {			/* Enter Idle state */
 		if (send_cmd(CMD8, 0x1AA) == 1) {	/* SDv2 */
-			for (n = 0; n < 4; n++) ocr[n] = rcv_spi();		/* Get trailing return value of R7 resp */
+			for (n = 0; n < 4; n++) ocr[n] = spi_send(0xff);		/* Get trailing return value of R7 resp */
 			if (ocr[2] == 0x01 && ocr[3] == 0xAA) {			/* The card can work at vdd range of 2.7-3.6V */
-				for (tmr = 10000; tmr && send_cmd(ACMD41, 1UL << 30); tmr--) dly_100us();	/* Wait for leaving idle state (ACMD41 with HCS bit) */
+				for (tmr = 10000; tmr && send_cmd(ACMD41, 1UL << 30); tmr--) _delay_us(100);	/* Wait for leaving idle state (ACMD41 with HCS bit) */
 				if (tmr && send_cmd(CMD58, 0) == 0) {		/* Check CCS bit in the OCR */
-					for (n = 0; n < 4; n++) ocr[n] = rcv_spi();
+					for (n = 0; n < 4; n++) ocr[n] = spi_send(0xff);
 					ty = (ocr[0] & 0x40) ? CT_SD2 | CT_BLOCK : CT_SD2;	/* SDv2 (HC or SC) */
 				}
 			}
@@ -146,14 +147,14 @@ DSTATUS disk_initialize (void)
 			} else {
 				ty = CT_MMC; cmd = CMD1;	/* MMCv3 */
 			}
-			for (tmr = 10000; tmr && send_cmd(cmd, 0); tmr--) dly_100us();	/* Wait for leaving idle state */
+			for (tmr = 10000; tmr && send_cmd(cmd, 0); tmr--) _delay_us(100);	/* Wait for leaving idle state */
 			if (!tmr || send_cmd(CMD16, 512) != 0)			/* Set R/W block length to 512 */
 				ty = 0;
 		}
 	}
 	CardType = ty;
 	DESELECT();
-	rcv_spi();
+	spi_send(0xff);
 
 	return ty ? 0 : STA_NOINIT;
 }
@@ -183,7 +184,7 @@ DRESULT disk_readp (
 
 		bc = 40000;
 		do {							/* Wait for data packet */
-			rc = rcv_spi();
+			rc = spi_send(0xff);
 		} while (rc == 0xFF && --bc);
 
 		if (rc == 0xFE) {				/* A data packet arrived */
@@ -191,29 +192,29 @@ DRESULT disk_readp (
 
 			/* Skip leading bytes */
 			if (ofs) {
-				do rcv_spi(); while (--ofs);
+				do spi_send(0xff); while (--ofs);
 			}
 
 			/* Receive a part of the sector */
 			if (buff) {	/* Store data to the memory */
 				do {
-					*buff++ = rcv_spi();
+					*buff++ = spi_send(0xff);
 				} while (--cnt);
 			} else {	/* Forward data to the outgoing stream (depends on the project) */
 				do {
-					//FORWARD(rcv_spi());
+					//FORWARD(spi_send(0xff));
 				} while (--cnt);
 			}
 
 			/* Skip trailing bytes and CRC */
-			do rcv_spi(); while (--bc);
+			do spi_send(0xff); while (--bc);
 
 			res = RES_OK;
 		}
 	}
 
 	DESELECT();
-	rcv_spi();
+	spi_send(0xff);
 
 	return res;
 }
@@ -239,7 +240,7 @@ DRESULT disk_writep (
 	if (buff) {		/* Send data bytes */
 		bc = (WORD)sa;
 		while (bc && wc) {		/* Send data bytes to the card */
-			xmit_spi(*buff++);
+			spi_send(*buff++);
 			wc--; bc--;
 		}
 		res = RES_OK;
@@ -247,19 +248,19 @@ DRESULT disk_writep (
 		if (sa) {	/* Initiate sector write process */
 			if (!(CardType & CT_BLOCK)) sa *= 512;	/* Convert to byte address if needed */
 			if (send_cmd(CMD24, sa) == 0) {			/* WRITE_SINGLE_BLOCK */
-				xmit_spi(0xFF); xmit_spi(0xFE);		/* Data block header */
+				spi_send(0xFF); spi_send(0xFE);		/* Data block header */
 				wc = 512;							/* Set byte counter */
 				res = RES_OK;
 			}
 		} else {	/* Finalize sector write process */
 			bc = wc + 2;
-			while (bc--) xmit_spi(0);	/* Fill left bytes and CRC with zeros */
-			if ((rcv_spi() & 0x1F) == 0x05) {	/* Receive data resp and wait for end of write process in timeout of 500ms */
-				for (bc = 5000; rcv_spi() != 0xFF && bc; bc--) dly_100us();	/* Wait ready */
+			while (bc--) spi_send(0);	/* Fill left bytes and CRC with zeros */
+			if ((spi_send(0xff) & 0x1F) == 0x05) {	/* Receive data resp and wait for end of write process in timeout of 500ms */
+				for (bc = 5000; spi_send(0xff) != 0xFF && bc; bc--) _delay_us(100);	/* Wait ready */
 				if (bc) res = RES_OK;
 			}
 			DESELECT();
-			rcv_spi();
+			spi_send(0xff);
 		}
 	}
 

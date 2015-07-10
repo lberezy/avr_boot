@@ -4,17 +4,10 @@
 /* http://www.cs.mun.ca/~rod/Winter2007/4723/notes/serial/serial.html */
 
 void uart_init(void) {
-    UBRRH = UBRRH_VALUE;
-    UBRRL = UBRRL_VALUE;
-
-#if USE_2X
-    UCSRA |= _BV(U2X);
-#else
-    UCSRA &= ~(_BV(U2X));
-#endif
-
-    UCSRC = _BV(UCSZ1) | _BV(UCSZ0) | _BV(URSEL); /* 8-bit data */
-    UCSRB = _BV(RXEN) | _BV(TXEN);   /* Enable RX and TX */
+      UBRRH = (BAUDRATE>>8);                      // shift the register right by 8 bits
+      UBRRL = BAUDRATE;                           // set baud rate
+      UCSRB|= (1<<TXEN)|(1<<RXEN);                // enable receiver and transmitter
+      UCSRC|= (1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);   // 8bit data format
 }
 
 void uart_putchar(char c, FILE *stream) {

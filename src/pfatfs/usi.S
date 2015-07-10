@@ -122,5 +122,3 @@ xmit_spi:
 	brne	1b		; /
 	ret
 .endfunc
-
-
