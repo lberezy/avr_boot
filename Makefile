@@ -10,13 +10,13 @@ BAUD  = 9600UL
 ## Also try BAUD = 19200 or 38400 if you're feeling lucky.
 
 SRCDIR = src
-OBJDIR = obj/
+OBJDIR = obj
 
 ## A directory for common include files and the simple USART library.
 ## If you move either the current folder or the Library folder, you'll
 ##  need to change this path to match.
 LIBDIR = lib
-FATDIR = $(SRCDIR)/pfatfs
+
 
 ##########------------------------------------------------------##########
 ##########                 Programmer Defaults                  ##########
@@ -56,13 +56,16 @@ TARGET = main#$(lastword $(subst /, ,$(CURDIR)))
 # Object files: will find all .c/.h files in current directory
 #  and in LIBDIR.  If you have any other (sub-)directories with code,
 #  you can add them in to SOURCES below in the wildcard statement.
-SOURCES=$(wildcard $(SRCDIR)/*.c $(LIBDIR)/*.c $(FATDIR)/*.c)
-OBJECTS=$(SOURCES:.c=.o)
+# SOURCES=$(wildcard $(SRCDIR)/*.c )
+SOURCES:=$(wildcard src/*.c)
+SOURCES+=$(wildcard src/*/*.c)
+# SOURCES := $(shell find $(SOURCEDIR) --name '*.c')
+OBJECTS=$(patsubst src/%.c,obj/%.o,$(SOURCES))
 HEADERS=$(SOURCES:.c=.h)
 
 ## Compilation options, type man avr-gcc if you're curious.
-CPPFLAGS = -DF_CPU=$(F_CPU) -DBAUD=$(BAUD) -I. -I$(LIBDIR)
-CFLAGS = -Os -g -std=gnu99 -Wall
+CPPFLAGS = -DF_CPU=$(F_CPU) -DBAUD=$(BAUD) -I. -I$(LIBDIR) -MP -MD
+CFLAGS = -Os -std=gnu99 -Wall
 ## Use short (8-bit) data types
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 ## Splits up object files per function
@@ -71,21 +74,25 @@ LDFLAGS = -Wl,-Map,$(TARGET).map
 ## Optional, but often ends up with smaller code
 LDFLAGS += -Wl,--gc-sections
 ## Relax shrinks code even more, but makes disassembly messy
-## LDFLAGS += -Wl,--relax
+LDFLAGS += -Wl,--relax
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm  ## for floating-point printf
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_min      ## for smaller printf
 TARGET_ARCH = -mmcu=$(MCU)
 
+-include $(SRC:.c=.d)
 
-$(OBJECTS): | obj
+all: $(TARGET).hex
 
-obj:
-		@mkdir -p $@
+
+$(OBJECTS): | $(OBJDIR)
+
+$(OBJDIR):
+		find "$(SRCDIR)" -type d | sed -e "s?$(SRCDIR)?$(OBJDIR)?" | xargs mkdir -p
 
 ## Explicit pattern rules:
 ##  To make .o files from .c files
-$(OBJDIR)/%.o: %.c $(HEADERS)
-		@echo $@
+obj/%.o: src/%.c # src/$(HEADERS)
+	@echo "Making: " $@
 	 $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c -o $@ $<;
 
 $(TARGET).elf: $(OBJECTS)
@@ -103,11 +110,13 @@ $(TARGET).elf: $(OBJECTS)
 ## These targets don't have files named after them
 .PHONY: all disassemble disasm eeprom size clean squeaky_clean flash fuses
 
-all: $(TARGET).hex
+
 
 debug:
 	@echo
 	@echo "Source files:"   $(SOURCES)
+	@echo "Headers:" $(HEADERS)
+	@echo "Objects:" $(OBJECTS)
 	@echo "MCU, F_CPU, BAUD:"  $(MCU), $(F_CPU), $(BAUD)
 	@echo
 
@@ -124,14 +133,12 @@ size:  $(TARGET).elf
 	$(AVRSIZE) --format=SysV $(TARGET).elf
 
 clean:
-	rm -r $(SRCDIR)/*.o $(SRCDIR)/*.hex $(SRCDIR)/*.elf $(SRCDIR)/*.obj
-	#rm -f $(TARGET).elf $(TARGET).hex $(TARGET).obj \
-	#$(TARGET).o $(TARGET).d $(TARGET).eep $(TARGET).lst \
-	#$(TARGET).lss $(TARGET).sym $(TARGET).map \
-	#$(TARGET).eeprom
+	find . -name "*.o" -type f -delete
+	find . -name "*.hex" -type f -delete
+	find . -name "*.elf" -type f -delete
+	find . -name "*.d" -type f -delete
+	find . -name "*.map" -type f -delete
 
-squeaky_clean:
-	rm -f *.elf *.hex *.obj *.o *.d *.eep *.lst *.lss *.sym *.map *.eeprom
 
 ##########------------------------------------------------------##########
 ##########              Programmer-specific details             ##########
@@ -174,7 +181,27 @@ flash_109: flash
 ##########       Fuse settings and suitable defaults            ##########
 ##########------------------------------------------------------##########
 
-## Mega 48, 88, 168, 328 default values
+# ATMega8 fuse bits used above (fuse bits for other devices are different!):
+# Example for 8 MHz internal oscillator
+# Fuse high byte:
+# 0xd9 = 1 1 0 1   1 0 0 1 <-- BOOTRST (boot reset vector at 0x0000)
+#        ^ ^ ^ ^   ^ ^ ^------ BOOTSZ0
+#        | | | |   | +-------- BOOTSZ1
+#        | | | |   +---------- EESAVE (set to 0 to preserve EEPROM over chip erase)
+#        | | | +-------------- CKOPT (clock option, depends on oscillator type)
+#        | | +---------------- SPIEN (if set to 1, serial programming is disabled)
+#        | +------------------ WDTON (if set to 0, watchdog is always on)
+#        +-------------------- RSTDISBL (if set to 0, RESET pin is disabled)
+# Fuse low byte:
+# 0x24 = 0 0 1 0   0 1 0 0
+#        ^ ^ \ /   \--+--/
+#        | |  |       +------- CKSEL 3..0 (8M internal RC)
+#        | |  +--------------- SUT 1..0 (slowly rising power)
+#        | +------------------ BODEN (if 0, brown-out detector is enabled)
+#        +-------------------- BODLEVEL (if 0: 4V, if 1: 2.7V)
+#
+# For computing fuse byte values for other devices and options see
+# the fuse bit calculator at http://www.engbedded.com/fusecalc/
 LFUSE = 0x24
 HFUSE = 0xd9
 EFUSE = 0x00
