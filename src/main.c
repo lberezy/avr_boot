@@ -16,7 +16,7 @@
 
 
 
-FRESULT scan_files (char* path)
+/*FRESULT scan_files (char* path)
 {
     FRESULT res;
     FILINFO fno;
@@ -46,11 +46,11 @@ FRESULT scan_files (char* path)
         }
     }
     return res;
-}
+}*/
 
 int main(void)
 {
-  FATFS fs;
+  /*FATFS fs;
   DSTATUS status;
   FRESULT result;
   char buff[512];
@@ -91,5 +91,11 @@ int main(void)
   } while (br > 0);
   putchar('\n');
   //printf("Read total: %d\n", total_b);
+  return 0;*/
+  DDRD = 0xff;
+  disk_initialize();
+  while(1) {
+    PORTD ^= 0xff;
+  }
   return 0;
 }
