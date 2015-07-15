@@ -13,8 +13,10 @@ void spi_init(uint8_t lsbfirst,
               uint8_t master,
               uint8_t mode,
               uint8_t clkrate,
-              uint8_t dblclk);
+              uint8_t dblclk)
+              __attribute__((section(".library")));
 
-uint8_t spi_send(uint8_t value);
+uint8_t spi_send(uint8_t value)
+__attribute__((section(".library")));
 
 #endif

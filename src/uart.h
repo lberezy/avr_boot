@@ -11,10 +11,14 @@
 #include <util/setbaud.h>
 #include <stdio.h>
 
-void uart_init(void);
-void uart_putchar(char c, FILE *stream);
-char uart_getchar(FILE *stream);
+void uart_init(void)
+__attribute__((section(".library")));
+void uart_putchar(char c, FILE *stream)
+__attribute__((section(".library")));
+char uart_getchar(FILE *stream)
+__attribute__((section(".library")));
 
-void redirect_io(void);
+void redirect_io(void)
+__attribute__((section(".library")));
 
 #endif

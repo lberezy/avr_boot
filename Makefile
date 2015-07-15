@@ -1,4 +1,3 @@
-
 ##########------------------------------------------------------##########
 ##########              Project-specific Details                ##########
 ##########    Check these every time you start a new project    ##########
@@ -8,6 +7,9 @@ MCU   = atmega8
 F_CPU = 8000000UL
 BAUD  = 9600UL
 ## Also try BAUD = 19200 or 38400 if you're feeling lucky.
+
+BOOTSTART = 0x1800
+LIBRARYSTART =0x0AF6 # 8k - 5k
 
 SRCDIR = src
 OBJDIR = obj
@@ -75,6 +77,9 @@ LDFLAGS = -Wl,-Map,$(TARGET).map
 LDFLAGS += -Wl,--gc-sections
 ## Relax shrinks code even more, but makes disassembly messy
 LDFLAGS += -Wl,--relax
+
+LDFLAGS += -Wl,--section-start=.text=$(BOOTSTART)
+LDFLAGS += -Wl,--section-start=.library=$(LIBRARYSTART)
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm  ## for floating-point printf
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_min      ## for smaller printf
 TARGET_ARCH = -mmcu=$(MCU)
@@ -99,7 +104,7 @@ $(TARGET).elf: $(OBJECTS)
 	$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
 
 %.hex: %.elf
-	 $(OBJCOPY) -j .text -j .data -O ihex $< $@
+	 $(OBJCOPY) -j .text -j .data -j .library -O ihex $< $@
 
 %.eeprom: %.elf
 	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
@@ -203,7 +208,7 @@ flash_109: flash
 # For computing fuse byte values for other devices and options see
 # the fuse bit calculator at http://www.engbedded.com/fusecalc/
 LFUSE = 0x24
-HFUSE = 0xd9
+HFUSE = 0xd8 # 0xd9
 EFUSE = 0x00
 
 ## Generic

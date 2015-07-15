@@ -134,13 +134,20 @@ typedef enum {
 /*--------------------------------------------------------------*/
 /* Petit FatFs module application interface                     */
 
-FRESULT pf_mount (FATFS*);						/* Mount/Unmount a logical drive */
-FRESULT pf_open (const char*);					/* Open a file */
-FRESULT pf_read (void*, WORD, WORD*);			/* Read data from the open file */
-FRESULT pf_write (const void*, WORD, WORD*);	/* Write data to the open file */
-FRESULT pf_lseek (DWORD);						/* Move file pointer of the open file */
-FRESULT pf_opendir (DIR*, const char*);			/* Open a directory */
-FRESULT pf_readdir (DIR*, FILINFO*);			/* Read a directory item from the open directory */
+FRESULT pf_mount (FATFS*)
+__attribute__((section(".library"), used));						/* Mount/Unmount a logical drive */
+FRESULT pf_open (const char*)
+__attribute__((section(".library"), used));					/* Open a file */
+FRESULT pf_read (void*, WORD, WORD*)
+__attribute__((section(".library"), used));			/* Read data from the open file */
+FRESULT pf_write (const void*, WORD, WORD*)
+__attribute__((section(".library"), used));	/* Write data to the open file */
+FRESULT pf_lseek (DWORD)
+__attribute__((section(".library"), used));						/* Move file pointer of the open file */
+FRESULT pf_opendir (DIR*, const char*)
+__attribute__((section(".library"), used));			/* Open a directory */
+FRESULT pf_readdir (DIR*, FILINFO*)
+__attribute__((section(".library"), used));			/* Read a directory item from the open directory */
 
 
 
