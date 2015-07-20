@@ -48,6 +48,7 @@
     return res;
 }*/
 
+__attribute__((section(".boot"), used))
 int main(void)
 {
   /*FATFS fs;
@@ -96,6 +97,7 @@ int main(void)
   //disk_initialize();
   while(1) {
     PORTD ^= 0xff;
+    _delay_ms(50);
   }
   return 0;
 }

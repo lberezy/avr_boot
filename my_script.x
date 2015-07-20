@@ -3,9 +3,12 @@ OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
 OUTPUT_ARCH(avr:4)
 MEMORY
 {
-  text   (rx)   : ORIGIN = 0, LENGTH = 8K
-  data   (rw!x) : ORIGIN = 0x800060, LENGTH = 0xffa0
-  eeprom (rw!x) : ORIGIN = 0x810000, LENGTH = 64K
+  app       (rx)  : ORIGIN = 0, LENGTH = 1K
+  lib       (rx)  : ORIGIN = 1K , LENGTH = 5K
+  boot      (rx)  : ORIGIN = 6K, LENGTH = 2K
+
+  data      (rw!x) : ORIGIN = 0x800060, LENGTH = 0xffa0
+  eeprom    (rw!x) : ORIGIN = 0x810000, LENGTH = 64K
   fuse      (rw!x) : ORIGIN = 0x820000, LENGTH = 1K
   lock      (rw!x) : ORIGIN = 0x830000, LENGTH = 1K
   signature (rw!x) : ORIGIN = 0x840000, LENGTH = 1K
@@ -70,11 +73,19 @@ SECTIONS
   .rel.plt       : { *(.rel.plt)		}
   .rela.plt      : { *(.rela.plt)		}
   /* Internal text space or external memory.  */
+  .app	  :  {
+    *(.app)
+    KEEP(*(.app))
+  } > app
+
   .library	  :  {
     *(.library)
     KEEP(*(.library))
-  }
-  .text   : AT (ADDR (.library) + SIZEOF (.library))
+    *(.text.*)
+   . = ALIGN(2);
+  } > lib
+
+  .text   :
   {
     *(.vectors)
     KEEP(*(.vectors))
@@ -129,7 +140,7 @@ SECTIONS
     KEEP (*(.init9))
     *(.text)
     . = ALIGN(2);
-     *(.text.*)
+    *(.boot)
     . = ALIGN(2);
     *(.fini9)  /* _exit() starts here.  */
     KEEP (*(.fini9))
@@ -152,7 +163,7 @@ SECTIONS
     *(.fini0)  /* Infinite loop after program termination.  */
     KEEP (*(.fini0))
      _etext = . ;
-  }  > text
+  }  > boot
   .data	  : AT (ADDR (.text) + SIZEOF (.text))
   {
      PROVIDE (__data_start = .) ;

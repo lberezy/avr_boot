@@ -79,9 +79,9 @@ LDFLAGS += -Wl,--gc-sections
 ## Relax shrinks code even more, but makes disassembly messy
 ## LDFLAGS += -Wl,--relax
 
-##LDFLAGS += -Wl,--section-start=.text=$(BOOTSTART)
-LDFLAGS += -Wl,-Ttext=$(BOOTSTART)
- LDFLAGS += -Wl,--section-start=.library=$(LIBRARYSTART)
+## LDFLAGS += -Wl,--section-start=.text=$(BOOTSTART)
+## LDFLAGS += -Wl,-Ttext=$(BOOTSTART)
+## LDFLAGS += -Wl,--section-start=.library=$(LIBRARYSTART)
 LDFLAGS += -T $(LINK_SCRIPT)
 
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm  ## for floating-point printf
@@ -108,7 +108,7 @@ $(TARGET).elf: $(OBJECTS)
 	$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
 
 %.hex: %.elf
-	 $(OBJCOPY) -j .text -j .data -j .library -O ihex $< $@
+	 $(OBJCOPY)  -O ihex $< $@
 
 %.eeprom: %.elf
 	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
