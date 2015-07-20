@@ -93,7 +93,7 @@ int main(void)
   //printf("Read total: %d\n", total_b);
   return 0;*/
   DDRD = 0xff;
-  disk_initialize();
+  //disk_initialize();
   while(1) {
     PORTD ^= 0xff;
   }

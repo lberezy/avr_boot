@@ -54,6 +54,7 @@ AVRDUDE = avrdude
 # TARGET = blinkLED
 ## Or name it automatically after the enclosing directory
 TARGET = main#$(lastword $(subst /, ,$(CURDIR)))
+LINK_SCRIPT = my_script.x
 
 # Object files: will find all .c/.h files in current directory
 #  and in LIBDIR.  If you have any other (sub-)directories with code,
@@ -76,10 +77,13 @@ LDFLAGS = -Wl,-Map,$(TARGET).map
 ## Optional, but often ends up with smaller code
 LDFLAGS += -Wl,--gc-sections
 ## Relax shrinks code even more, but makes disassembly messy
-LDFLAGS += -Wl,--relax
+## LDFLAGS += -Wl,--relax
 
-LDFLAGS += -Wl,--section-start=.text=$(BOOTSTART)
-LDFLAGS += -Wl,--section-start=.library=$(LIBRARYSTART)
+##LDFLAGS += -Wl,--section-start=.text=$(BOOTSTART)
+LDFLAGS += -Wl,-Ttext=$(BOOTSTART)
+ LDFLAGS += -Wl,--section-start=.library=$(LIBRARYSTART)
+LDFLAGS += -T $(LINK_SCRIPT)
+
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_flt -lm  ## for floating-point printf
 ## LDFLAGS += -Wl,-u,vfprintf -lprintf_min      ## for smaller printf
 TARGET_ARCH = -mmcu=$(MCU)
@@ -207,16 +211,17 @@ flash_109: flash
 #
 # For computing fuse byte values for other devices and options see
 # the fuse bit calculator at http://www.engbedded.com/fusecalc/
-LFUSE = 0x24
-HFUSE = 0xd8 # 0xd9
+LFUSE = 0x64
+#0x24 - now with no brownout
+HFUSE = 0xd8
+#0xd9 - moved BOOTRST
 EFUSE = 0x00
 
 ## Generic
 FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m -U efuse:w:$(EFUSE):m
 
 fuses:
-	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) \
-	           $(PROGRAMMER_ARGS) $(FUSE_STRING)
+	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) $(PROGRAMMER_ARGS) $(FUSE_STRING)
 show_fuses:
 	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) $(PROGRAMMER_ARGS) -nv
 

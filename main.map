@@ -43,9 +43,6 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 obj/main.o
  .text          0x0000000000000000        0x0 obj/mylib.o
  .bss           0x0000000000000000        0x0 obj/mylib.o
- .rodata.str1.1
-                0x0000000000000000        0xd obj/mylib.o
- .library       0x0000000000000000       0x18 obj/mylib.o
  .text          0x0000000000000000        0x0 obj/spi.o
  .bss           0x0000000000000000        0x0 obj/spi.o
  .rodata.__SPI_DBLCLK_MASK
@@ -66,30 +63,12 @@ Discarded input sections
                 0x0000000000000000        0x1 obj/spi.o
  .text          0x0000000000000000        0x0 obj/uart.o
  .bss           0x0000000000000000        0x0 obj/uart.o
- .library       0x0000000000000000       0x6a obj/uart.o
  .text          0x0000000000000000        0x0 obj/pfatfs/mmc.o
  .bss           0x0000000000000000        0x0 obj/pfatfs/mmc.o
- .text.disk_readp
-                0x0000000000000000       0xa6 obj/pfatfs/mmc.o
  .text          0x0000000000000000        0x0 obj/pfatfs/pff.o
  .bss           0x0000000000000000        0x0 obj/pfatfs/pff.o
- .text.clust2sect
-                0x0000000000000000       0x44 obj/pfatfs/pff.o
- .text.dir_rewind
-                0x0000000000000000       0x58 obj/pfatfs/pff.o
- .text.get_fat  0x0000000000000000       0x74 obj/pfatfs/pff.o
- .text.dir_next
-                0x0000000000000000       0xbc obj/pfatfs/pff.o
- .text.check_fs
-                0x0000000000000000       0x6a obj/pfatfs/pff.o
- .text.follow_path
-                0x0000000000000000      0x17a obj/pfatfs/pff.o
- .library       0x0000000000000000      0x654 obj/pfatfs/pff.o
- .bss.FatFs     0x0000000000000000        0x2 obj/pfatfs/pff.o
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
- .text.libgcc.mul
-                0x0000000000000000       0x18 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
  .text.libgcc.div
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
  .text.libgcc   0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
@@ -103,8 +82,6 @@ Discarded input sections
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_muluhisi3.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_muluhisi3.o)
- .text.libgcc.mul
-                0x0000000000000000       0x14 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_muluhisi3.o)
  .text.libgcc.div
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_muluhisi3.o)
  .text.libgcc   0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_muluhisi3.o)
@@ -120,8 +97,6 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.mul
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_udivmodsi4.o)
- .text.libgcc.div
-                0x0000000000000000       0x44 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc   0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_udivmodsi4.o)
  .text.libgcc.prologue
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_udivmodsi4.o)
@@ -178,31 +153,18 @@ Discarded input sections
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_clear_bss.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(iob.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(iob.o)
- COMMON         0x0000000000000000        0x6 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(iob.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(printf.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(printf.o)
- .text.avr-libc
-                0x0000000000000000       0x26 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(printf.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(vfprintf_std.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(vfprintf_std.o)
- .text.avr-libc
-                0x0000000000000000      0x386 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(vfprintf_std.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen_P.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen_P.o)
- .text.avr-libc
-                0x0000000000000000       0x16 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen_P.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen.o)
- .text.avr-libc
-                0x0000000000000000       0x16 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(fputc.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(fputc.o)
- .text.avr-libc
-                0x0000000000000000       0x70 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(fputc.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(ultoa_invert.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(ultoa_invert.o)
- .text.avr-libc
-                0x0000000000000000       0xbc /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(ultoa_invert.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
  .text.libgcc.mul
@@ -210,8 +172,6 @@ Discarded input sections
  .text.libgcc.div
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
  .text.libgcc   0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
- .text.libgcc.prologue
-                0x0000000000000000       0x38 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
  .text.libgcc.builtins
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
  .text.libgcc.fmul
@@ -225,8 +185,6 @@ Discarded input sections
  .text.libgcc.div
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_epilogue.o)
  .text.libgcc   0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_epilogue.o)
- .text.libgcc.prologue
-                0x0000000000000000       0x36 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_epilogue.o)
  .text.libgcc.builtins
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_epilogue.o)
  .text.libgcc.fmul
@@ -352,7 +310,30 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000001800      0x23c
+.library        0x0000000000000af6      0x928
+ *(.library)
+ .library       0x0000000000000af6       0x18 obj/mylib.o
+                0x0000000000000af6                my_func
+ .library       0x0000000000000b0e       0x56 obj/spi.o
+                0x0000000000000b0e                spi_init
+                0x0000000000000b5a                spi_send
+ .library       0x0000000000000b64       0x6a obj/uart.o
+                0x0000000000000b64                uart_init
+                0x0000000000000b78                uart_putchar
+                0x0000000000000b8e                uart_getchar
+                0x0000000000000b96                redirect_io
+ .library       0x0000000000000bce      0x1fc obj/pfatfs/mmc.o
+                0x0000000000000bce                disk_initialize
+                0x0000000000000d24                disk_readp
+ .library       0x0000000000000dca      0x654 obj/pfatfs/pff.o
+                0x0000000000000dca                pf_mount
+                0x0000000000000fbe                pf_open
+                0x0000000000001052                pf_read
+                0x00000000000011da                pf_opendir
+                0x0000000000001256                pf_readdir
+ *(.library)
+
+.text           0x0000000000001800      0xa76 load address 0x000000000000141e
  *(.vectors)
  .vectors       0x0000000000001800       0x26 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/crtm8.o
                 0x0000000000001800                __vectors
@@ -431,18 +412,59 @@ END GROUP
                 0x000000000000185e                . = ALIGN (0x2)
  *(.text.*)
  .text.startup.main
-                0x000000000000185e        0xe obj/main.o
+                0x000000000000185e        0xc obj/main.o
                 0x000000000000185e                main
  .text.send_cmd
-                0x000000000000186c       0x76 obj/pfatfs/mmc.o
- .text.disk_initialize
-                0x00000000000018e2      0x156 obj/pfatfs/mmc.o
-                0x00000000000018e2                disk_initialize
-                0x0000000000001a38                . = ALIGN (0x2)
+                0x000000000000186a       0x76 obj/pfatfs/mmc.o
+ .text.clust2sect
+                0x00000000000018e0       0x44 obj/pfatfs/pff.o
+ .text.dir_rewind
+                0x0000000000001924       0x58 obj/pfatfs/pff.o
+ .text.get_fat  0x000000000000197c       0x74 obj/pfatfs/pff.o
+ .text.dir_next
+                0x00000000000019f0       0xbc obj/pfatfs/pff.o
+ .text.check_fs
+                0x0000000000001aac       0x6a obj/pfatfs/pff.o
+ .text.follow_path
+                0x0000000000001b16      0x17a obj/pfatfs/pff.o
+ .text.libgcc.mul
+                0x0000000000001c90       0x18 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_umulhisi3.o)
+                0x0000000000001c90                __umulhisi3
+ .text.libgcc.mul
+                0x0000000000001ca8       0x14 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_muluhisi3.o)
+                0x0000000000001ca8                __muluhisi3
+ .text.libgcc.div
+                0x0000000000001cbc       0x44 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_udivmodsi4.o)
+                0x0000000000001cbc                __udivmodsi4
+ .text.avr-libc
+                0x0000000000001d00       0x26 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(printf.o)
+                0x0000000000001d00                printf
+ .text.avr-libc
+                0x0000000000001d26      0x386 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(vfprintf_std.o)
+                0x0000000000001d26                vfprintf
+ .text.avr-libc
+                0x00000000000020ac       0x16 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen_P.o)
+                0x00000000000020ac                strnlen_P
+ .text.avr-libc
+                0x00000000000020c2       0x16 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(strnlen.o)
+                0x00000000000020c2                strnlen
+ .text.avr-libc
+                0x00000000000020d8       0x70 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(fputc.o)
+                0x00000000000020d8                fputc
+ .text.avr-libc
+                0x0000000000002148       0xbc /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(ultoa_invert.o)
+                0x0000000000002148                __ultoa_invert
+ .text.libgcc.prologue
+                0x0000000000002204       0x38 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_prologue.o)
+                0x0000000000002204                __prologue_saves__
+ .text.libgcc.prologue
+                0x000000000000223c       0x36 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_epilogue.o)
+                0x000000000000223c                __epilogue_restores__
+                0x0000000000002272                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000001a38        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_exit.o)
-                0x0000000000001a38                exit
-                0x0000000000001a38                _exit
+ .fini9         0x0000000000002272        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_exit.o)
+                0x0000000000002272                exit
+                0x0000000000002272                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -461,11 +483,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000001a38        0x4 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_exit.o)
+ .fini0         0x0000000000002272        0x4 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/avr4/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000001a3c                _etext = .
+                0x0000000000002276                _etext = .
 
-.data           0x0000000000800060        0x0 load address 0x0000000000001a3c
+.data           0x0000000000800060        0xe load address 0x0000000000002276
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/crtm8.o
@@ -493,27 +515,33 @@ END GROUP
  *(.data*)
  *(.rodata)
  *(.rodata*)
+ .rodata.str1.1
+                0x0000000000800060        0xd obj/mylib.o
  *(.gnu.linkonce.d*)
-                0x0000000000800060                . = ALIGN (0x2)
-                0x0000000000800060                _edata = .
-                0x0000000000800060                PROVIDE (__data_end, .)
+                0x000000000080006e                . = ALIGN (0x2)
+ *fill*         0x000000000080006d        0x1 
+                0x000000000080006e                _edata = .
+                0x000000000080006e                PROVIDE (__data_end, .)
 
-.bss            0x0000000000800060        0x1
-                0x0000000000800060                PROVIDE (__bss_start, .)
+.bss            0x000000000080006e        0x9
+                0x000000000080006e                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.CardType  0x0000000000800060        0x1 obj/pfatfs/mmc.o
+ .bss.CardType  0x000000000080006e        0x1 obj/pfatfs/mmc.o
+ .bss.FatFs     0x000000000080006f        0x2 obj/pfatfs/pff.o
  *(COMMON)
-                0x0000000000800061                PROVIDE (__bss_end, .)
-                0x0000000000001a3c                __data_load_start = LOADADDR (.data)
-                0x0000000000001a3c                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x0000000000800071        0x6 /usr/local/Cellar/avr-gcc/4.9.2/lib/gcc/avr/4.9.2/../../../../avr/lib/avr4/libc.a(iob.o)
+                0x0000000000800071                __iob
+                0x0000000000800077                PROVIDE (__bss_end, .)
+                0x0000000000002276                __data_load_start = LOADADDR (.data)
+                0x0000000000002284                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0000000000800061        0x0
-                0x0000000000800061                PROVIDE (__noinit_start, .)
+.noinit         0x0000000000800077        0x0
+                0x0000000000800077                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x0000000000800061                PROVIDE (__noinit_end, .)
-                0x0000000000800061                _end = .
-                0x0000000000800061                PROVIDE (__heap_start, .)
+                0x0000000000800077                PROVIDE (__noinit_end, .)
+                0x0000000000800077                _end = .
+                0x0000000000800077                PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
  *(.eeprom*)
@@ -671,8 +699,3 @@ END GROUP
  *(.debug_macro)
 OUTPUT(main.elf elf32-avr)
 LOAD linker stubs
-
-.library        0x0000000000000af6       0x56
- .library       0x0000000000000af6       0x56 obj/spi.o
-                0x0000000000000af6                spi_init
-                0x0000000000000b42                spi_send

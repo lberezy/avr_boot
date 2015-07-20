@@ -23,9 +23,12 @@ typedef enum {
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
-DSTATUS disk_initialize (void);
-DRESULT disk_readp (BYTE*, DWORD, WORD, WORD);
-DRESULT disk_writep (const BYTE*, DWORD);
+DSTATUS disk_initialize (void)
+__attribute__((section(".library"), used));
+DRESULT disk_readp (BYTE*, DWORD, WORD, WORD)
+__attribute__((section(".library"), used));
+DRESULT disk_writep (const BYTE*, DWORD)
+__attribute__((section(".library"), used));
 
 #define STA_NOINIT		0x01	/* Drive not initialized */
 #define STA_NODISK		0x02	/* No medium in the drive */

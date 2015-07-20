@@ -12,13 +12,13 @@
 #include <stdio.h>
 
 void uart_init(void)
-__attribute__((section(".library")));
+__attribute__((section(".library"), used));
 void uart_putchar(char c, FILE *stream)
-__attribute__((section(".library")));
+__attribute__((section(".library"), used));
 char uart_getchar(FILE *stream)
-__attribute__((section(".library")));
+__attribute__((section(".library"), used));
 
 void redirect_io(void)
-__attribute__((section(".library")));
+__attribute__((section(".library"), used));
 
 #endif
