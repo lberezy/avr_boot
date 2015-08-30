@@ -12,11 +12,13 @@
 #include "uart.h"
 #include "pfatfs/pff.h"
 #include "pfatfs/diskio.h"
-#include <string.h>
+#include "lcd.h"
+//#include <string.h>
+//#include <stdlib.h>
 
 
-
-/*FRESULT scan_files (char* path)
+/*__attribute__((section(".boot")))
+FRESULT scan_files (char* path)
 {
     FRESULT res;
     FILINFO fno;
@@ -46,15 +48,57 @@
         }
     }
     return res;
-}*/
+} */
+
+__attribute__((section(".boot")))
+void fill_page() {
+
+}
+
+#define RESET_VECTOR() ((void(const *)(void))0)()
+FATFS* fs;
+DSTATUS status;
+FRESULT result;
+volatile uint8_t buff[512];
+
 
 __attribute__((section(".boot"), used))
 int main(void)
 {
+  DDRD = 0xff;
+  for (int i = 10; i > 0; i--) {
+    PORTD ^= 0x01;
+    _delay_ms(50);
+  }
+
+  spi_init(0, 1, 3, 0, 1);
+  lcd_init();
+  lcd_draw_string(1,1, "LCD Initialised.");
+  lcd_fill();
+  lcd_draw_string(1,1, "Initialising SD card");
+  lcd_fill();
+  status = disk_initialize();
+  switch(status) {
+    case STA_NODISK:
+      lcd_draw_string(1,1, "No disk");
+      break;
+    case STA_NOINIT:
+      lcd_draw_string(1,1, "Not initialised");
+      break;
+    default:
+      lcd_draw_string(1,1, "Initialisation failed");
+      break;
+  }
+  lcd_fill();
+
+
+
+  // jump to application
+  //asm("ijmp" :: "z" (0x0));
   /*FATFS fs;
   DSTATUS status;
   FRESULT result;
-  char buff[512];
+  volatile char buff[512];
 
 
   uart_init();
@@ -62,7 +106,7 @@ int main(void)
   FILE uart_input = FDEV_SETUP_STREAM(NULL, uart_getchar, _FDEV_SETUP_READ);
   stdout = &uart_output;
   stdin  = &uart_input;
-
+  puts("Test");
   status = disk_initialize();
   if (status == NULL) {
     //puts("SD card initialialised correctly.");
@@ -92,12 +136,12 @@ int main(void)
   } while (br > 0);
   putchar('\n');
   //printf("Read total: %d\n", total_b);
-  return 0;*/
-  DDRD = 0xff;
-  //disk_initialize();
-  while(1) {
-    PORTD ^= 0xff;
-    _delay_ms(50);
-  }
   return 0;
+  /*DDRD = 0xff;
+  //disk_initialize();
+
+  return 0;*/
+  //set_led();
+
+
 }

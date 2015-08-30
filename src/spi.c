@@ -4,6 +4,7 @@
 const uint8_t __SPI_MOSI = PB3;
 const uint8_t __SPI_MISO = PB4;
 const uint8_t __SPI_SCK = PB5;
+const uint8_t __SPI_CS_IN = PB2;
 const uint8_t __SPI_LSBFIRST_MASK = 0b00000001;
 const uint8_t __SPI_MASTER_MASK = 0b00000001;
 const uint8_t __SPI_MODE_MASK = 0b00000011;
@@ -35,7 +36,7 @@ void spi_init(uint8_t lsbfirst,
               uint8_t clkrate,
               uint8_t dblclk){
   //set outputs
-  __SPI_DDR |= ((1<<__SPI_MOSI) | (1<<__SPI_SCK));
+  __SPI_DDR |= ((1<<__SPI_MOSI) | (1<<__SPI_SCK) | (1<<__SPI_CS_IN));
   //set inputs
   __SPI_DDR &= ~(1<<__SPI_MISO);
   __SPI_PORT |= (1<<__SPI_MISO); //turn on pull-up resistor

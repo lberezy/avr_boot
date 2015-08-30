@@ -3,7 +3,7 @@
 ##########    Check these every time you start a new project    ##########
 ##########------------------------------------------------------##########
 
-MCU   = atmega8
+MCU   = atmega328p
 F_CPU = 8000000UL
 BAUD  = 9600UL
 ## Also try BAUD = 19200 or 38400 if you're feeling lucky.
@@ -53,8 +53,8 @@ AVRDUDE = avrdude
 ## The name of your project (without the .c)
 # TARGET = blinkLED
 ## Or name it automatically after the enclosing directory
-TARGET = main#$(lastword $(subst /, ,$(CURDIR)))
-LINK_SCRIPT = my_script.x
+TARGET = bootloader#$(lastword $(subst /, ,$(CURDIR)))
+LINK_SCRIPT = ld_script_boot.x
 
 # Object files: will find all .c/.h files in current directory
 #  and in LIBDIR.  If you have any other (sub-)directories with code,
@@ -75,9 +75,9 @@ CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -ffunction-sections -fdata-sections
 LDFLAGS = -Wl,-Map,$(TARGET).map
 ## Optional, but often ends up with smaller code
-LDFLAGS += -Wl,--gc-sections
+## LDFLAGS += -Wl,--gc-sections
 ## Relax shrinks code even more, but makes disassembly messy
-## LDFLAGS += -Wl,--relax
+LDFLAGS += -Wl,--relax
 
 ## LDFLAGS += -Wl,--section-start=.text=$(BOOTSTART)
 ## LDFLAGS += -Wl,-Ttext=$(BOOTSTART)
@@ -117,18 +117,22 @@ $(TARGET).elf: $(OBJECTS)
 	$(OBJDUMP) -S $< > $@
 
 ## These targets don't have files named after them
-.PHONY: all disassemble disasm eeprom size clean squeaky_clean flash fuses
-
+.PHONY: all disassemble disasm eeprom size clean squeaky_clean flash fuses symbols
 
 
 debug:
-	@echo
+	@echo $(TARGET)
 	@echo "Source files:"   $(SOURCES)
 	@echo "Headers:" $(HEADERS)
 	@echo "Objects:" $(OBJECTS)
 	@echo "MCU, F_CPU, BAUD:"  $(MCU), $(F_CPU), $(BAUD)
 	@echo
 
+symbols: $(TARGET).elf
+	$(OBJCOPY) --wildcard --strip-symbol=main --strip-symbol="_*" $(TARGET).elf $(TARGET).syms
+
+library: $(OBJECTS)
+	avr-ar rcs lib$(TARGET).a $(OBJECTS)
 # Optionally create listing file from .elf
 # This creates approximate assembly-language equivalent of your code.
 # Useful for debugging time-sensitive bits,
@@ -147,6 +151,7 @@ clean:
 	find . -name "*.elf" -type f -delete
 	find . -name "*.d" -type f -delete
 	find . -name "*.map" -type f -delete
+	find . -name "*.syms" -type f -delete
 
 
 ##########------------------------------------------------------##########
@@ -211,12 +216,15 @@ flash_109: flash
 #
 # For computing fuse byte values for other devices and options see
 # the fuse bit calculator at http://www.engbedded.com/fusecalc/
-LFUSE = 0x64
+## LFUSE = 0x64
+LFUSE = 0xe2
 #0x24 - now with no brownout
+## HFUSE = 0xd8
 HFUSE = 0xd8
 #0xd9 - moved BOOTRST
-EFUSE = 0x00
-
+##EFUSE = 0x00
+EFUSE = 0x07
+## avrdude reads back unimplemented bits as 0, causes error for 0xff
 ## Generic
 FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m -U efuse:w:$(EFUSE):m
 

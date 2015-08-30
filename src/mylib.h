@@ -3,6 +3,6 @@
 
 #include <stdio.h>
 typedef void (*my_fun_pt)(int);
-void my_func(int i) __attribute__((section(".library"), used));/* __attribute__((section(".foo"), noinline));*/
+void my_func(int i);/* __attribute__((section(".foo"), noinline));*/
 
 #endif
