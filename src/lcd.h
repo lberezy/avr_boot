@@ -155,5 +155,7 @@ void lcd_draw_point(uint8_t x, uint8_t y);
 void lcd_draw_char(uint8_t x, uint8_t line, char c);
 void lcd_draw_string(uint8_t x, uint8_t line, char *str);
 void lcd_draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
+void lcd_putchar(char c);
+void lcd_draw_term(void);
 
 #endif

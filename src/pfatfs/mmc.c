@@ -22,10 +22,10 @@
 #define SPI_DDR DDRB
 #define SPI_PIN PINB
 
-#define SELECT()	SPI_PORT &= ~_BV(SPI_CS) /* CS = L */
-#define	DESELECT()	SPI_PORT |= _BV(SPI_CS) /* CS = H */
-#define	MMC_SEL		!(SPI_PORT & _BV(SPI_CS)) /* CS status (true:CS == L) */
-/*#define	FORWARD(d)	uart_putc(d) /* Data forwarding function (Console out in this example) */
+#define SELECT()	(SPI_PORT &= ~_BV(SPI_CS)) /* CS = L */
+#define	DESELECT()	(SPI_PORT |= _BV(SPI_CS)) /* CS = H */
+#define	MMC_SEL		(!(SPI_PORT & _BV(SPI_CS))) /* CS status (true:CS == L) */
+/*#define	FORWARD(d)	uart_putc(d) // Data forwarding function (Console out in this example) */
 
 
 
@@ -126,7 +126,6 @@ DSTATUS disk_initialize (void)
 #if _USE_WRITE
 	if (CardType && MMC_SEL) disk_writep(0, 0);	/* Finalize write process if it is in progress */
 #endif
-	spi_init(0, 1, 0, 3, 0);		/* Initialize ports to control MMC */
 	DESELECT();
 	for (n = 10; n; n--) spi_send(0xff);	/* 80 dummy clocks with CS=H */
 

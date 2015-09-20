@@ -46,7 +46,7 @@
 /  might occupy 128 bytes on the RAM on some platforms, e.g. avr-gcc. */
 
 
-#define _WORD_ACCESS	1
+#define _WORD_ACCESS	0
 /* The _WORD_ACCESS option defines which access method is used to the word
 /  data in the FAT structure.
 /

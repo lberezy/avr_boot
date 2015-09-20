@@ -1,15 +1,6 @@
-#include <avr/io.h> //for I/O pin operations
 #include "spi.h"
 
-const uint8_t __SPI_MOSI = PB3;
-const uint8_t __SPI_MISO = PB4;
-const uint8_t __SPI_SCK = PB5;
-const uint8_t __SPI_CS_IN = PB2;
-const uint8_t __SPI_LSBFIRST_MASK = 0b00000001;
-const uint8_t __SPI_MASTER_MASK = 0b00000001;
-const uint8_t __SPI_MODE_MASK = 0b00000011;
-const uint8_t __SPI_SPEED_MASK = 0b00000011;
-const uint8_t __SPI_DBLCLK_MASK = 0b00000001;
+
 
 //initialize the SPI bus
 //  uint8_t lsbfirst - if 0: most significant bit is transmitted first
@@ -30,26 +21,24 @@ const uint8_t __SPI_DBLCLK_MASK = 0b00000001;
 //                    3      CPUCLK/128
 //  uint8_t dblclk - if 1: doubles the SPI clock rate in master mode
 //  EXAMPLE: spi_init(0, 1, 0, 3, 0)
-void spi_init(uint8_t lsbfirst,
-              uint8_t master,
-              uint8_t mode,
-              uint8_t clkrate,
-              uint8_t dblclk){
+void spi_init(spi_setting_t settings) {
+  // enable pull-ups
+  __SPI_PIN |= ((1 << __SPI_MISO));
   //set outputs
-  __SPI_DDR |= ((1<<__SPI_MOSI) | (1<<__SPI_SCK) | (1<<__SPI_CS_IN));
+  __SPI_DDR |= ((1<<__SPI_MOSI) | (1<<__SPI_SCK));
   //set inputs
   __SPI_DDR &= ~(1<<__SPI_MISO);
   __SPI_PORT |= (1<<__SPI_MISO); //turn on pull-up resistor
   //set SPI control register
   SPCR = (
            (1<<SPE) | //enable SPI
-           ((lsbfirst & __SPI_LSBFIRST_MASK)<<DORD) | //set msb/lsb ordering
-           ((master & __SPI_MASTER_MASK)<<MSTR) | //set master/slave mode
-           ((mode & __SPI_MODE_MASK)<<CPHA) | //set mode
-           (clkrate & __SPI_SPEED_MASK<<SPR0) //set speed
+           ((settings.endianness & __SPI_LSBFIRST_MASK)<<DORD) | //set msb/lsb ordering
+           ((settings.bus_mode & __SPI_MASTER_MASK)<<MSTR) | //set master/slave mode
+           ((settings.trans_mode & __SPI_MODE_MASK)<<CPHA) | //set mode
+           (settings.clock_rate & __SPI_SPEED_MASK<<SPR0) //set speed
          );
   //set double speed bit
-  SPSR = ((dblclk & __SPI_DBLCLK_MASK)<<SPI2X);
+  SPSR = ((settings.double_clock  & __SPI_DBLCLK_MASK)<<SPI2X);
 }
 
 //shifts out 8 bits of data

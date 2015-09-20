@@ -21,8 +21,10 @@
 #define LCD_BACKLIGHT_ACTIVATE() (LCD_PORT |= _BV(LCD_BACKLIGHT_PIN))
 #define LCD_BACKLIGHT_DEACTIVATE() (LCD_PORT &= ~(_BV(LCD_BACKLIGHT_PIN)))
 #define LCD_PORT_INIT() (LCD_DDR |= _BV(LCD_RST_PIN) | _BV(LCD_CE_PIN) | _BV(LCD_DC_PIN) | _BV(LCD_BACKLIGHT_PIN))
-
+// frame buffer
 uint8_t fb[PCD8544_MAX_BANKS * PCD8544_MAX_COLS];
+//terminal buffer
+char tb[PCD8544_MAX_BANKS][PCD8544_MAX_COLS / (5 + 1)];
 
 void lcd_command(char c) {
   LCD_DC_COMM();
@@ -129,8 +131,9 @@ void lcd_draw_char(uint8_t x, uint8_t line, char c)
 
 	/* Only works for fonts < 8 bits in height */
   const uint8_t font_width = 5;
+  const uint8_t font_length = 96;
 	for ( i = 0; i < font_width; i++ ) {
-    fb[x + (line * PCD8544_MAX_COLS)] = Font5x7[ ((c - 32) * (font_width)) + i ];
+    fb[x + (line * PCD8544_MAX_COLS)] = Font5x7[ (((c - 32) % font_length) * (font_width)) + i  ];
     x++;
 	}
 }
@@ -161,5 +164,28 @@ void lcd_fill(void) {
       lcd_data(fb[(bank * PCD8544_MAX_COLS) + column]);
       fb[(bank * PCD8544_MAX_COLS) + column] = 0x00;
     }
+  }
+}
+
+static uint8_t row = 0;
+static uint8_t col = 0;
+const uint8_t char_width = 6;
+const uint8_t term_width_px = 84;
+const uint8_t term_rows = 6;
+
+void lcd_putchar(char c) {
+  if (col > ((term_width_px - char_width)/ char_width)) {
+    col = 0;
+    row = (row + 1) % term_rows;
+  }
+  tb[row][col] = c;
+  col++;
+}
+
+void lcd_draw_term(void) {
+  for(uint8_t i = 0; i < term_rows; i++) {
+      for (uint8_t x = 0; x < (term_width_px / char_width); x++) {
+        lcd_draw_char(x * char_width, (col + i) % term_rows, tb[(col + i) % term_rows][x]);
+      }
   }
 }

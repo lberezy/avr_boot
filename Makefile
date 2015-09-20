@@ -3,7 +3,7 @@
 ##########    Check these every time you start a new project    ##########
 ##########------------------------------------------------------##########
 
-MCU   = atmega328p
+MCU   = atmega16
 F_CPU = 8000000UL
 BAUD  = 9600UL
 ## Also try BAUD = 19200 or 38400 if you're feeling lucky.
@@ -69,8 +69,10 @@ HEADERS=$(SOURCES:.c=.h)
 ## Compilation options, type man avr-gcc if you're curious.
 CPPFLAGS = -DF_CPU=$(F_CPU) -DBAUD=$(BAUD) -I. -I$(LIBDIR) -MP -MD
 CFLAGS = -Os -std=gnu99 -Wall
+CFLAGS += -DDEBUG
 ## Use short (8-bit) data types
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -fms-extensions
 ## Splits up object files per function
 CFLAGS += -ffunction-sections -fdata-sections
 LDFLAGS = -Wl,-Map,$(TARGET).map
@@ -117,7 +119,7 @@ $(TARGET).elf: $(OBJECTS)
 	$(OBJDUMP) -S $< > $@
 
 ## These targets don't have files named after them
-.PHONY: all disassemble disasm eeprom size clean squeaky_clean flash fuses symbols
+.PHONY: all disassemble disasm eeprom size clean squeaky_clean flash fuses symbols library
 
 
 debug:
@@ -152,6 +154,7 @@ clean:
 	find . -name "*.d" -type f -delete
 	find . -name "*.map" -type f -delete
 	find . -name "*.syms" -type f -delete
+	find . -name "*.a" -type f -delete
 
 
 ##########------------------------------------------------------##########
