@@ -7,10 +7,11 @@
 #include "lcd.h"
 #include "buttons.h"
 #include "buffer.h"
+#include "sd.h"
+#include "graphics.h"
 
 #define RESET_VECTOR() ((void(const *)(void))0)()
 
-buffer_t buffer;
 
 __attribute__((section(".boot")))
 void fill_page(uint8_t* buff) {
