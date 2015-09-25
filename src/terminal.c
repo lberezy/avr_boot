@@ -3,11 +3,14 @@
 
 static char tb[DISPLAY_HEIGHT / 8][DISPLAY_WIDTH / (5 + 1)];
 
-void term_putchar(term_t* term, char c) {
-  if (col > ((term_width_px - char_width)/ char_width)) {
-    col = 0;
-    row = (row + 1) % term_rows;
+void term_putchar(terminal_t* term, char c) {
+  // todo: handle \n
+  if (term->cursor_x > term->rows) {
+    term->cursor_x = 0;
+    term->cursor_y = (term->cursor_y + 1) % term->cols;
   }
-  tb[row][col] = c;
-  col++;
+  (term->buffer)[term->cursor_y][term->cursor_x] = c;
+  //tb[row][col] = c;
+  //col++;
+  (term->cursor_x)++;
 }

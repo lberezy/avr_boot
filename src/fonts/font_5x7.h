@@ -9,7 +9,7 @@
 #define FONT_GLYPH_WIDTH  5     // glyph width in px
 #define FONT_GLYPH_HEIGHT 7     // glyph height in px
 
-const uint8_t font_data PROGMEM {
+const uint8_t PROGMEM font_data[] = {
   0x00, 0x00, 0x00, 0x00, 0x00,// (space)
   0x00, 0x00, 0x5F, 0x00, 0x00,// !
   0x00, 0x07, 0x00, 0x07, 0x00,// "

@@ -8,10 +8,13 @@ void swap(uint8_t* a, uint8_t* b)
     *b = temp;
 }
 
-void lcd_draw_term(term_t* term) {
-  for(uint8_t y = 0; y < term->rows; i++) {
-      for (uint8_t x = 0; x < (term_width_px / char_width); x++) {
-        lcd_draw_char(x * char_width, (col + y) % term_rows, term->buffer[(col + y) % term_rows][x]);
+void lcd_draw_term(terminal_t* term) {
+  // todo: handle \n
+  uint8_t max_rows = term->rows;
+  uint8_t cursor_current_col = term->cursor_y;
+  for(uint8_t y = 0; y < term->rows; y++) {
+      for (uint8_t x = 0; x < term->cols; x++) {
+        lcd_draw_char(x * FONT_GLYPH_WIDTH, (cursor_current_col + y) % max_rows, (term->buffer)[x + (cursor_current_col + y) % max_rows * max_rows]);
       }
   }
 }
@@ -66,7 +69,8 @@ void lcd_draw_char(uint8_t x, uint8_t line, char c)
   const uint8_t font_width = 5;
   const uint8_t font_length = 96;
 	for ( i = 0; i < font_width; i++ ) {
-    fb[x + (line * PCD8544_MAX_COLS)] = Font5x7[ (((c - 32) % font_length) * (font_width)) + i  ];
+    // need to use pgm_read_byte to access font data
+    buffer.fb[x + (line * PCD8544_MAX_COLS)] = font_data[ (((c - 32) % font_length) * (font_width)) + i  ];
     x++;
 	}
 }

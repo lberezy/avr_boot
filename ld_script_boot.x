@@ -4,7 +4,7 @@ OUTPUT_ARCH(avr:5)
 MEMORY
 {
   app       (rx)  : ORIGIN = 0, LENGTH = 1K
-  lib       (rx)  : ORIGIN = 10K , LENGTH = 6K
+  lib       (rx)  : ORIGIN = 10K , LENGTH = 5K
   boot      (rx)  : ORIGIN = 30K, LENGTH = 2K
 
   data      (rw!x) : ORIGIN = 0x800060, LENGTH = 0xffa0

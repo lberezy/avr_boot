@@ -26,6 +26,7 @@ void boot_interactive() {
     PORTD ^= 0x01;
     _delay_ms(50);
   }
+  return;
 }
 
 __attribute__((section(".boot")))
@@ -36,5 +37,11 @@ int main(void)
 
   if(!buttons_isset(BTN_A)) {
     asm("ijmp" :: "z" (0x0));
+  } else {
+    boot_interactive();
   }
+
+  // perform SD loader
+
+  // wait for watchdog to time out and reset system
 }

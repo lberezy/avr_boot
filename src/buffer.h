@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "lcd.h"
+#include "lcd.h"  // for display size constants
 
 #define SD_BUFFER_SIZE 128
 #define FRAME_BUFFER_SIZE (DISPLAY_WIDTH * DISPLAY_HEIGHT / 8)

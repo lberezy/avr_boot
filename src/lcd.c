@@ -19,11 +19,6 @@
 #define LCD_BACKLIGHT_ACTIVATE() (LCD_PORT |= _BV(LCD_BACKLIGHT_PIN))
 #define LCD_BACKLIGHT_DEACTIVATE() (LCD_PORT &= ~(_BV(LCD_BACKLIGHT_PIN)))
 #define LCD_PORT_INIT() (LCD_DDR |= _BV(LCD_RST_PIN) | _BV(LCD_CE_PIN) | _BV(LCD_DC_PIN) | _BV(LCD_BACKLIGHT_PIN))
-// frame buffer
-uint8_t fb[PCD8544_MAX_BANKS * PCD8544_MAX_COLS];
-//terminal buffer
-
-
 
 void lcd_command(char c) {
   LCD_DC_COMM();
