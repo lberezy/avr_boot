@@ -1,4 +1,5 @@
 #include "sd.h"
+#include "graphics.h"
 FATFS* fs;
 
 uint8_t sd_init(void) {
@@ -93,7 +94,7 @@ uint8_t sd_init(void) {
   #endif
   return SD_INIT_SUCCESS;
 }
-
+/*
 FRESULT sd_scan_files (char* path) {
     FRESULT res;
     FILINFO fno;
@@ -116,7 +117,6 @@ FRESULT sd_scan_files (char* path) {
             while ((fno.fname[j++]) != '\0') {
               lcd_putchar(fno.fname[j]);
             }
-            lcd_draw_term();
             lcd_fill();
             //putchar('\n');
             //printf("[%c]%s/%s\n", (fno.fattrib & AM_DIR) ? 'D' : 'F', path, fno.fname);
@@ -124,3 +124,4 @@ FRESULT sd_scan_files (char* path) {
     }
     return res;
 }
+*/

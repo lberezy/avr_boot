@@ -1,10 +1,11 @@
 /* Default linker script, for normal executables */
 OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
+/* for ATMega16 */
 OUTPUT_ARCH(avr:5)
 MEMORY
 {
-  app       (rx)  : ORIGIN = 0, LENGTH = 1K
-  lib       (rx)  : ORIGIN = 10K , LENGTH = 5K
+  app       (rx)  : ORIGIN = 0, LENGTH = 8K
+  lib       (rx)  : ORIGIN = 10K , LENGTH = 6K
   boot      (rx)  : ORIGIN = 30K, LENGTH = 2K
 
   data      (rw!x) : ORIGIN = 0x800060, LENGTH = 0xffa0

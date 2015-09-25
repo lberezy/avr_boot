@@ -1,11 +1,12 @@
-#ifndef _BUFFER_H
-#define _BUFFER_H
+#ifndef BUFFER_H
+#define BUFFER_H
 
 #include <stdint.h>
 
 #include "lcd.h"  // for display size constants
 
 #define SD_BUFFER_SIZE 128
+
 #define FRAME_BUFFER_SIZE (DISPLAY_WIDTH * DISPLAY_HEIGHT / 8)
 
 #define FLASH_BUFFER_SIZE 64

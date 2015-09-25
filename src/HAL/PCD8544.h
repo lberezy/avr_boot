@@ -1,5 +1,5 @@
-#ifndef _PCD8544_H
-#define _PCD8544_H
+#ifndef PCD8544_H
+#define PCD8544_H
 
 
 /*#ifdef _LCD_DRIVER

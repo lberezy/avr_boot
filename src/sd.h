@@ -1,5 +1,5 @@
-#ifndef _SD_H
-#define _SD_H
+#ifndef SD_H
+#define SD_H
 
 #include <string.h>
 

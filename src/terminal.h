@@ -1,5 +1,9 @@
-#ifndef _TERMINAL_H
-#define _TERMINAL_H
+#ifndef TERMINAL_H
+#define TERMINAL_H
+
+#include "stdint.h"
+
+#include "buffer.h"
 
 typedef struct {
   uint8_t scroll_x;

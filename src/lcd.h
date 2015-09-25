@@ -1,19 +1,15 @@
-#ifndef _LCD_H
-#define _LCD_H
+#ifndef LCD_H
+#define LCD_H
 
 #include <avr/io.h>
 #include <stdint.h>
 #include <util/delay.h>
 
-#include "buffer.h"
 #include "spi.h"
-
-/* select appropriate LCD controller */
-#include "HAL/PCD8544.h"
-//#include "HAL/UC1701.h"
-
+#include "HAL/lcd_hardware.h"
+#include "buffer.h"
 /*#ifndef _LCD_CONTROLLER
-#error No LCD controller selected.
+#error No LCD controller selected.`2`
 #endif*/
 
 void lcd_command(char c);
