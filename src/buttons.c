@@ -20,6 +20,7 @@ void buttons_init(void) {
 
   // enable pin-change interrupt (INT0, PD2)
   //SREG |= ; // enable global interrupts
+  sei();
   MCUCR |= _BV(ISC00); // interrupt on changing level
   GICR |= _BV(INT0);  // enable INT0
 }
@@ -40,8 +41,8 @@ static void _buttons_scan() {
   buttons.polling = !!(buttons.intRep);
 }
 
-uint8_t buttons_poll(void) {
-
-  buttons.polling = false;
-  return 0;
+void buttons_poll(void) {
+  if(buttons.polling) {
+    _buttons_scan();
+  }
 }

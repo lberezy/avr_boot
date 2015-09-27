@@ -6,7 +6,7 @@
 #include <util/delay.h>
 
 #include "spi.h"
-#include "HAL/lcd_hardware.h"
+#include "HAL/board.h"
 #include "buffer.h"
 /*#ifndef _LCD_CONTROLLER
 #error No LCD controller selected.`2`

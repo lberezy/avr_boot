@@ -9,6 +9,4 @@
 #define FONT_LAST_ASCII   '}'   // number of ASCII characters covered from point
 #define FONT_GLYPH_WIDTH  5     // glyph width in px
 #define FONT_GLYPH_HEIGHT 7     // glyph height in px
-const uint8_t font_data[];
-
 #endif

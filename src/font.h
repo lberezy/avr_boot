@@ -8,8 +8,9 @@
   const uint8_t height_px;
   const uint8_t font_data[];
 } font_t; */
-
+#include <stdint.h>
 /* defines global "font" variable */
 #include "fonts/font_5x7.h"
+const uint8_t* font_data;
 
 #endif

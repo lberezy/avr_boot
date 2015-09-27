@@ -26,9 +26,9 @@ LIBDIR = lib
 ##########        (Can override.  See bottom of file.)          ##########
 ##########------------------------------------------------------##########
 
-PROGRAMMER_TYPE = USBasp
+PROGRAMMER_TYPE = jtag1
 # extra arguments to avrdude: baud rate, chip type, -F flag, etc.
-PROGRAMMER_ARGS =
+PROGRAMMER_ARGS = -P /dev/tty.usbserial-A104BYXE
 
 ##########------------------------------------------------------##########
 ##########                  Program Locations                   ##########
@@ -53,7 +53,7 @@ AVRDUDE = avrdude
 ## The name of your project (without the .c)
 # TARGET = blinkLED
 ## Or name it automatically after the enclosing directory
-TARGET = bootloader#$(lastword $(subst /, ,$(CURDIR)))
+TARGET = bootloader
 LINK_SCRIPT = ld_script_boot.x
 
 # Object files: will find all .c/.h files in current directory
@@ -156,6 +156,8 @@ clean:
 	find . -name "*.syms" -type f -delete
 	find . -name "*.a" -type f -delete
 
+squeaky_clean: | clean
+	rm -rf obj
 
 ##########------------------------------------------------------##########
 ##########              Programmer-specific details             ##########
@@ -174,83 +176,24 @@ flash_eeprom: $(TARGET).eeprom
 avrdude_terminal:
 	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) $(PROGRAMMER_ARGS) -nt
 
-## If you've got multiple programmers that you use,
-## you can define them here so that it's easy to switch.
-## To invoke, use something like `make flash_arduinoISP`
-flash_usbtiny: PROGRAMMER_TYPE = usbtiny
-flash_usbtiny: PROGRAMMER_ARGS =  # USBTiny works with no further arguments
-flash_usbtiny: flash
-
-flash_usbasp: PROGRAMMER_TYPE = usbasp
-flash_usbasp: PROGRAMMER_ARGS =  # USBasp works with no further arguments
-flash_usbasp: flash
-
-flash_arduinoISP: PROGRAMMER_TYPE = avrisp
-flash_arduinoISP: PROGRAMMER_ARGS = -b 19200 -P /dev/ttyACM0
-## (for windows) flash_arduinoISP: PROGRAMMER_ARGS = -b 19200 -P com5
-flash_arduinoISP: flash
-
-flash_109: PROGRAMMER_TYPE = avr109
-flash_109: PROGRAMMER_ARGS = -b 9600 -P /dev/ttyUSB0
-flash_109: flash
-
 ##########------------------------------------------------------##########
-##########       Fuse settings and suitable defaults            ##########
+##########       Fuse settings 													        ##########
 ##########------------------------------------------------------##########
 
-# ATMega8 fuse bits used above (fuse bits for other devices are different!):
-# Example for 8 MHz internal oscillator
-# Fuse high byte:
-# 0xd9 = 1 1 0 1   1 0 0 1 <-- BOOTRST (boot reset vector at 0x0000)
-#        ^ ^ ^ ^   ^ ^ ^------ BOOTSZ0
-#        | | | |   | +-------- BOOTSZ1
-#        | | | |   +---------- EESAVE (set to 0 to preserve EEPROM over chip erase)
-#        | | | +-------------- CKOPT (clock option, depends on oscillator type)
-#        | | +---------------- SPIEN (if set to 1, serial programming is disabled)
-#        | +------------------ WDTON (if set to 0, watchdog is always on)
-#        +-------------------- RSTDISBL (if set to 0, RESET pin is disabled)
-# Fuse low byte:
-# 0x24 = 0 0 1 0   0 1 0 0
-#        ^ ^ \ /   \--+--/
-#        | |  |       +------- CKSEL 3..0 (8M internal RC)
-#        | |  +--------------- SUT 1..0 (slowly rising power)
-#        | +------------------ BODEN (if 0, brown-out detector is enabled)
-#        +-------------------- BODLEVEL (if 0: 4V, if 1: 2.7V)
-#
 # For computing fuse byte values for other devices and options see
 # the fuse bit calculator at http://www.engbedded.com/fusecalc/
 ## LFUSE = 0x64
-LFUSE = 0xe2
+LFUSE = 0xE4
 #0x24 - now with no brownout
 ## HFUSE = 0xd8
-HFUSE = 0xd8
+HFUSE = 0x98
 #0xd9 - moved BOOTRST
 ##EFUSE = 0x00
 EFUSE = 0x07
 ## avrdude reads back unimplemented bits as 0, causes error for 0xff
-## Generic
-FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m -U efuse:w:$(EFUSE):m
+## Generic -U efuse:w:$(EFUSE):m
+FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m
 
 fuses:
 	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) $(PROGRAMMER_ARGS) $(FUSE_STRING)
-show_fuses:
 	$(AVRDUDE) -c $(PROGRAMMER_TYPE) -p $(MCU) $(PROGRAMMER_ARGS) -nv
-
-## Called with no extra definitions, sets to defaults
-set_default_fuses:  FUSE_STRING = -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m -U efuse:w:$(EFUSE):m
-set_default_fuses:  fuses
-
-## Set the fuse byte for full-speed mode
-## Note: can also be set in firmware for modern chips
-set_fast_fuse: LFUSE = 0xE2
-set_fast_fuse: FUSE_STRING = -U lfuse:w:$(LFUSE):m
-set_fast_fuse: fuses
-
-## Set the EESAVE fuse byte to preserve EEPROM across flashes
-set_eeprom_save_fuse: HFUSE = 0xD7
-set_eeprom_save_fuse: FUSE_STRING = -U hfuse:w:$(HFUSE):m
-set_eeprom_save_fuse: fuses
-
-## Clear the EESAVE fuse byte
-clear_eeprom_save_fuse: FUSE_STRING = -U hfuse:w:$(HFUSE):m
-clear_eeprom_save_fuse: fuses

@@ -5,28 +5,13 @@
 #include <stdbool.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+
+#include "HAL/board.h"
+
 /* hardware abstractions */
-
-#define BTN_INPUT_PORT PORTD
-#define BTN_INPUT_PORTIN PIND
-#define BTN_INPUT_DDR DDRD
-
-#define BTN_DIR_PORT PORTB
-#define BTN_DIR_PORTIN PINB
-#define BTN_DIR_DDR DDRB
-
 #define BTN_DIR_MASK ( _BV(BTN_UP_PIN) |_BV(BTN_DOWN_PIN) | _BV(BTN_LEFT_PIN) | _BV(BTN_RIGHT_PIN))
 #define BTN_INPUT_MASK (_BV(BTN_A_PIN) | _BV(BTN_B_PIN))
 
-/* typesafe hardware pin mapping */
-enum {
-  BTN_A_PIN = 6,
-  BTN_B_PIN = 5,
-  BTN_UP_PIN = 1,
-  BTN_DOWN_PIN = 2,
-  BTN_LEFT_PIN = 0,
-  BTN_RIGHT_PIN = 3,
-} button_pin;
 
 
 /* software-only representation - matches with below struct */
@@ -59,5 +44,5 @@ typedef union {
 
 uint8_t buttons_isset(button_t button);
 void buttons_init(void);
-uint8_t buttons_poll(void);
+void buttons_poll(void);
 #endif
