@@ -11,7 +11,7 @@ static void _buttons_scan();
 static volatile btn_state_t buttons;  // global button state
 
 uint8_t buttons_isset(button_t button_mask) {
-  return buttons.intRep & button_mask;
+  return buttons & button_mask;
 }
 
 void buttons_init(void) {
@@ -26,33 +26,33 @@ void buttons_init(void) {
   //SREG |= ; // enable global interrupts
   MCUCR |= _BV(ISC00); // interrupt on changing level
   GICR |= _BV(INT0);  // enable INT0
-  buttons.polling = 1; // allow polling
+  // allow polling
+  buttons |= BTN_FLAG_POLLING;
   sei();
 
 }
 
 ISR(INT0_vect) {
-  USER_LED_TOGGLE();
-  _delay_ms(30);
   _buttons_scan();
 }
 
 static void _buttons_scan() {
+  // perform fresh scan
+  buttons = 0;
   // scan buttons
-  buttons.up    = (BTN_DIR_PORTIN & BTN_UP_PIN);
-  buttons.down  = (BTN_DIR_PORTIN & BTN_DOWN_PIN);
-  buttons.left  = (BTN_DIR_PORTIN & BTN_LEFT_PIN);
-  buttons.right = (BTN_DIR_PORTIN & BTN_RIGHT_PIN);
-  buttons.a     = (BTN_INPUT_PORTIN & BTN_A_PIN);
-  buttons.b     = (BTN_INPUT_PORTIN & BTN_B_PIN);
-  // poll for more simultaneous presses if any were detected
-  buttons.polling = !!(buttons.intRep);
-  USER_LED_TOGGLE();
-
+  buttons |= (BTN_DIR_MASK & ~BTN_DIR_PORTIN);
+  buttons |= (BTN_INPUT_MASK & ~BTN_INPUT_PORTIN);
+  // set polling flag if any button presses detected
+  // remove polling flag if no button presses detected
+  if (!!(buttons & BTN_ALL_MASK)) {
+    buttons |= BTN_FLAG_POLLING;
+  } else {
+    buttons &= ~ BTN_FLAG_POLLING;
+  }
 }
 
 void buttons_poll(void) {
-  if(buttons.polling) {
+  if(buttons & BTN_FLAG_POLLING) {
     _buttons_scan();
   }
 }

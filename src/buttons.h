@@ -12,33 +12,20 @@
 #define BTN_INPUT_MASK  (BTN_A_PIN | BTN_B_PIN)
 
 
-
-/* software-only representation - matches with below struct */
+#define BTN_FLAG_BITPOS 7
+/* software-only representation - matches with hardware*/
 typedef enum {
-  BTN_A         = _BV(0),
-  BTN_B         = _BV(1),
-  BTN_UP        = _BV(2),
-  BTN_DOWN      = _BV(3),
-  BTN_LEFT      = _BV(4),
-  BTN_RIGHT     = _BV(5),
-  _UNUSED       = _BV(6),
-  FLAG_POLLING  = _BV(7)
+  BTN_A             = BTN_A_PIN,
+  BTN_B             = BTN_B_PIN,
+  BTN_UP            = BTN_UP_PIN,
+  BTN_DOWN          = BTN_UP_PIN,
+  BTN_LEFT          = BTN_LEFT_PIN,
+  BTN_RIGHT         = BTN_RIGHT_PIN,
+  BTN_FLAG_POLLING  = _BV(BTN_FLAG_BITPOS)
 } button_t;
 
-typedef union {
-  struct  __attribute__ ((packed)) {
-    uint8_t a : 1;
-    uint8_t b : 1;
-    uint8_t up : 1;
-    uint8_t down : 1;
-    uint8_t left : 1;
-    uint8_t right : 1;
-    uint8_t unused : 1;
-    uint8_t polling : 1;
-  };
-  uint8_t intRep; /* integer representation of bit-field */
-} btn_state_t;
-
+#define BTN_ALL_MASK (BTN_A | BTN_B | BTN_UP | BTN_DOWN | BTN_LEFT | BTN_RIGHT)
+typedef uint8_t btn_state_t;
 
 
 uint8_t buttons_isset(button_t button_mask);

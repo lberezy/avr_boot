@@ -50,12 +50,12 @@ int main(void)
     }
   }*/
   while(1) {
-    /*buttons_poll();
-    if(buttons_isset(BTN_A)) {
+    buttons_poll();
+    if(!!buttons_isset(BTN_B | BTN_A)) {
       USER_LED_ON();
     } else {
       USER_LED_OFF();
-    } */
+    }
   }
   /*if(!buttons_isset(BTN_A)) {
     while(1);
