@@ -9,15 +9,16 @@
 #define BTN_DIR_PORTIN PINB
 #define BTN_DIR_DDR DDRB
 
+#include <avr/io.h>
 
 /* typesafe hardware pin mapping */
 enum {
-  BTN_A_PIN = 6,
-  BTN_B_PIN = 5,
-  BTN_UP_PIN = 1,
-  BTN_DOWN_PIN = 2,
-  BTN_LEFT_PIN = 0,
-  BTN_RIGHT_PIN = 3,
+  BTN_A_PIN     = _BV(6),
+  BTN_B_PIN     = _BV(5),
+  BTN_UP_PIN    = _BV(1),
+  BTN_DOWN_PIN  = _BV(2),
+  BTN_LEFT_PIN  = _BV(0),
+  BTN_RIGHT_PIN = _BV(3),
 } button_pin;
 
 #endif

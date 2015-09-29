@@ -10,6 +10,8 @@
 #include "buffer.h"
 #include "sd.h"
 #include "graphics.h"
+#include "systick.h"
+#include <avr/interrupt.h>
 
 #define RESET_VECTOR() ((void(const *)(void))0)()
 
@@ -31,15 +33,28 @@ void boot_interactive() {
 __attribute__((section(".boot")))
 int main(void)
 {
+  cli();
+  GICR = 1 << IVCE;
+  GICR = 1 << IVSEL;
+  sei();
+  USER_LED_INIT();
+  BACKLIGHT_LED_INIT();
   buttons_init();
-  _delay_ms(200); // wait a while
-  buttons_poll();
-  if(!buttons_isset(BTN_A)) {
+  systick_init();
+  uint32_t curr_tick = global_tick;
+  while(1) {
+    buttons_poll();
+    if(global_tick > curr_tick + 20) {
+      curr_tick = global_tick;
+      USER_LED_TOGGLE();
+    }
+  }
+  /*if(!buttons_isset(BTN_A)) {
     while(1);
     //asm("ijmp" :: "z" (0x0));
   } else {
     boot_interactive();
-  }
+  }*/
 
 
   // perform SD loader

@@ -4,26 +4,25 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <avr/io.h>
-#include <avr/interrupt.h>
 
 #include "HAL/board.h"
 
 /* hardware abstractions */
-#define BTN_DIR_MASK ( _BV(BTN_UP_PIN) |_BV(BTN_DOWN_PIN) | _BV(BTN_LEFT_PIN) | _BV(BTN_RIGHT_PIN))
-#define BTN_INPUT_MASK (_BV(BTN_A_PIN) | _BV(BTN_B_PIN))
+#define BTN_DIR_MASK    (BTN_UP_PIN | BTN_DOWN_PIN | BTN_LEFT_PIN | BTN_RIGHT_PIN)
+#define BTN_INPUT_MASK  (BTN_A_PIN | BTN_B_PIN)
 
 
 
 /* software-only representation - matches with below struct */
 typedef enum {
-  BTN_A,
-  BTN_B,
-  BTN_UP,
-  BTN_DOWN,
-  BTN_LEFT,
-  BTN_RIGHT,
-  _UNUSED,
-  FLAG_POLLING
+  BTN_A         = _BV(0),
+  BTN_B         = _BV(1),
+  BTN_UP        = _BV(2),
+  BTN_DOWN      = _BV(3),
+  BTN_LEFT      = _BV(4),
+  BTN_RIGHT     = _BV(5),
+  _UNUSED       = _BV(6),
+  FLAG_POLLING  = _BV(7)
 } button_t;
 
 typedef union {
@@ -42,7 +41,7 @@ typedef union {
 
 
 
-uint8_t buttons_isset(button_t button);
+uint8_t buttons_isset(button_t button_mask);
 void buttons_init(void);
 void buttons_poll(void);
 #endif

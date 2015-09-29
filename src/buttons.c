@@ -1,13 +1,17 @@
 #include "buttons.h"
 
+#include "led.h"
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#include <avr/io.h>
 
 static void _buttons_scan();
 
 
-btn_state_t buttons;  // global button state
+static volatile btn_state_t buttons;  // global button state
 
-uint8_t buttons_isset(button_t button) {
-  return buttons.intRep & _BV(button);
+uint8_t buttons_isset(button_t button_mask) {
+  return buttons.intRep & button_mask;
 }
 
 void buttons_init(void) {
@@ -20,9 +24,11 @@ void buttons_init(void) {
 
   // enable pin-change interrupt (INT0, PD2)
   //SREG |= ; // enable global interrupts
-  sei();
   MCUCR |= _BV(ISC00); // interrupt on changing level
   GICR |= _BV(INT0);  // enable INT0
+  buttons.polling = 1; // allow polling
+  sei();
+
 }
 
 ISR(INT0_vect) {
@@ -31,12 +37,12 @@ ISR(INT0_vect) {
 
 static void _buttons_scan() {
   // scan buttons
-  buttons.up =    ((BTN_DIR_PORTIN >> BTN_UP_PIN) & 1);
-  buttons.down =  ((BTN_DIR_PORTIN >> BTN_DOWN_PIN) & 1);
-  buttons.left =  ((BTN_DIR_PORTIN >> BTN_LEFT_PIN) & 1);
-  buttons.right = ((BTN_DIR_PORTIN >> BTN_RIGHT_PIN) & 1);
-  buttons.a =     ((BTN_DIR_PORTIN >> BTN_A_PIN) & 1);
-  buttons.b =     ((BTN_DIR_PORTIN >> BTN_B_PIN) & 1);
+  buttons.up    = (BTN_DIR_PORTIN & BTN_UP_PIN);
+  buttons.down  = (BTN_DIR_PORTIN & BTN_DOWN_PIN);
+  buttons.left  = (BTN_DIR_PORTIN & BTN_LEFT_PIN);
+  buttons.right = (BTN_DIR_PORTIN & BTN_RIGHT_PIN);
+  buttons.a     = (BTN_DIR_PORTIN & BTN_A_PIN);
+  buttons.b     = (BTN_DIR_PORTIN & BTN_B_PIN);
   // poll for more simultaneous presses if any were detected
   buttons.polling = !!(buttons.intRep);
 }

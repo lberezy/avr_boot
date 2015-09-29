@@ -5,4 +5,8 @@
 #define USER_LED_DDR  DDRC
 #define USER_LED_PIN  6
 
+#define BACKLIGHT_LED_PORT  PORTD
+#define BACKLIGHT_LED_DDR   DDRD
+#define BACKLIGHT_LED_PIN   4
+
 #endif

@@ -1,0 +1,26 @@
+#ifndef TIMER_HARDWARE_H
+#define TIMER_HARDWARE_H
+
+/* TCCR0 */
+
+
+#define TIMER0_CLK_SHIFT    0x02
+#define TIMER0_CLK_DIV_STOP 0x00
+#define TIMER0_CLK_DIV_1    0x01
+#define TIMER0_CLK_DIV_8    0x02
+#define TIMER0_CLK_DIV_64   0x03
+#define TIMER0_CLK_DIV_256  0x04
+#define TIMER0_CLK_DIV_1024 0x05
+
+/* TIMSK */
+#define TIMER0_COMP_MATCH_INT 0x01
+#define TIMER0_OVERFLOW_INT   0x00
+
+/* TIFR */
+#define TIMER0_OUT_COMP_FLAG  0x01
+#define TIMER0_OVERFLOW_FLAG  0x01
+
+/* SFIOR */
+#define TIMER0_PRESCALE_RST   0x00
+
+#endif
