@@ -16,8 +16,8 @@ uint8_t buttons_isset(button_t button_mask) {
 
 void buttons_init(void) {
   // set inputs
-  BTN_INPUT_DDR &= !BTN_INPUT_MASK;
-  BTN_DIR_DDR &= !BTN_DIR_MASK;
+  BTN_INPUT_DDR &= ~BTN_INPUT_MASK;
+  BTN_DIR_DDR &= ~BTN_DIR_MASK;
   // enable internal pull-up resistors
   BTN_INPUT_PORT |= BTN_INPUT_MASK;
   BTN_DIR_PORT |= BTN_DIR_MASK;
@@ -32,6 +32,8 @@ void buttons_init(void) {
 }
 
 ISR(INT0_vect) {
+  USER_LED_TOGGLE();
+  _delay_ms(30);
   _buttons_scan();
 }
 
@@ -41,10 +43,12 @@ static void _buttons_scan() {
   buttons.down  = (BTN_DIR_PORTIN & BTN_DOWN_PIN);
   buttons.left  = (BTN_DIR_PORTIN & BTN_LEFT_PIN);
   buttons.right = (BTN_DIR_PORTIN & BTN_RIGHT_PIN);
-  buttons.a     = (BTN_DIR_PORTIN & BTN_A_PIN);
-  buttons.b     = (BTN_DIR_PORTIN & BTN_B_PIN);
+  buttons.a     = (BTN_INPUT_PORTIN & BTN_A_PIN);
+  buttons.b     = (BTN_INPUT_PORTIN & BTN_B_PIN);
   // poll for more simultaneous presses if any were detected
   buttons.polling = !!(buttons.intRep);
+  USER_LED_TOGGLE();
+
 }
 
 void buttons_poll(void) {
