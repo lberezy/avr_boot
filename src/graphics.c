@@ -63,14 +63,10 @@ void lcd_draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 
 void lcd_draw_char(uint8_t x, uint8_t line, char c)
 {
-	uint8_t i;
-
-	/* Only works for fonts < 8 bits in height */
-  const uint8_t font_width = 5;
-  const uint8_t font_length = 96;
-	for ( i = 0; i < font_width; i++ ) {
+	/* Only works for fonts <= 8 bits in height */
+	for (uint8_t i = 0; i < FONT_GLYPH_WIDTH; i++ ) {
     // need to use pgm_read_byte to access font data
-    buffer.fb[x + (line * PCD8544_MAX_COLS)] = font_data[ (((c - 32) % font_length) * (font_width)) + i  ];
+    buffer.fb[x + (line * DISPLAY_WIDTH)] = font_data[ (((c - FONT_FIRST_ASCII) % FONT_LAST_ASCII) * (FONT_GLYPH_WIDTH)) + i  ];
     x++;
 	}
 }
@@ -78,16 +74,16 @@ void lcd_draw_char(uint8_t x, uint8_t line, char c)
 void lcd_draw_string(uint8_t x, uint8_t line, char *str) {
 	while (*str) {
 		lcd_draw_char(x, line, *str++);
-		x += (5 + 1);
-		if ((x + 5 + 1) >= 84) {
+		x += (FONT_GLYPH_WIDTH + 1);
+		if ((x + FONT_GLYPH_WIDTH + 1) >= DISPLAY_WIDTH) {
 			x = 0; /* Ran out of this line */
 			line++;
 		}
-		if (line >= (48/(7 + 1)))
+		if (line >= (DISPLAY_HEIGHT / (FONT_GLYPH_HEIGHT + 1)))
 			return; /* Ran out of space :( */
 	}
 }
 
 void lcd_draw_point(uint8_t x, uint8_t y) {
-  buffer.fb[x + (y/8) * PCD8544_MAX_COLS] |= ( 1 << (y%8));
+  buffer.fb[x + (y << 3) * DISPLAY_WIDTH] |= ( 1 << (y % 8));
 }

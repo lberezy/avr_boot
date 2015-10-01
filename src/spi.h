@@ -21,7 +21,7 @@ typedef enum {
   SPI_MODE_3 = 3,
 } spi_trans_mode_t;
 typedef enum {
-  SPI_CLKDIV_4 = 0,
+  SPI_CLOCKDIV_4 = 0,
   SPI_CLOCKDIV_16 = 1,
   SPI_CLOCKDIV_64 = 2,
   SPI_CLOCKDIV_128 = 3,

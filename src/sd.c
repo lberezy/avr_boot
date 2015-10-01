@@ -49,7 +49,7 @@ uint8_t sd_init(void) {
 #endif
   _delay_ms(50);
 
-  spi_settings.clock_rate = SPI_CLKDIV_4;
+  spi_settings.clock_rate = SPI_CLOCKDIV_4;
   spi_settings.double_clock =SPI_DBLCLK_ENABLE;
   spi_init(spi_settings);  // return to full speed spi
 

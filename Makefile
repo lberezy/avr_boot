@@ -75,7 +75,7 @@ CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -fms-extensions
 ## Splits up object files per function
 CFLAGS += -ffunction-sections -fdata-sections
-LDFLAGS = -Wl,-Map,$(TARGET).map,--cref
+LDFLAGS = -Wl,-Map,$(TARGET).map
 ## Optional, but often ends up with smaller code
 ## LDFLAGS += -Wl,--gc-sections
 ## Relax shrinks code even more, but makes disassembly messy

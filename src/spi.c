@@ -23,22 +23,22 @@
 //  EXAMPLE: spi_init(0, 1, 0, 3, 0)
 void spi_init(spi_setting_t settings) {
   // enable pull-ups
-  __SPI_PIN |= ((1 << __SPI_MISO));
+  SPI_PIN |= (_BV(SPI_MISO_PIN));
   //set outputs
-  __SPI_DDR |= ((1<<__SPI_MOSI) | (1<<__SPI_SCK));
+  SPI_DDR |= (_BV(SPI_MOSI_PIN) | _BV(SPI_SCK_PIN));
   //set inputs
-  __SPI_DDR &= ~(1<<__SPI_MISO);
-  __SPI_PORT |= (1<<__SPI_MISO); //turn on pull-up resistor
+  SPI_DDR &= ~_BV(SPI_MISO_PIN);
+  SPI_PORT |= _BV(SPI_MISO_PIN); //turn on pull-up resistor
   //set SPI control register
   SPCR = (
-           (1<<SPE) | //enable SPI
-           ((settings.endianness & __SPI_LSBFIRST_MASK)<<DORD) | //set msb/lsb ordering
-           ((settings.bus_mode & __SPI_MASTER_MASK)<<MSTR) | //set master/slave mode
-           ((settings.trans_mode & __SPI_MODE_MASK)<<CPHA) | //set mode
-           (settings.clock_rate & __SPI_SPEED_MASK<<SPR0) //set speed
+           _BV(SPE) | //enable SPI
+           ((settings.endianness & SPI_LSBFIRST_MASK) << DORD) | //set msb/lsb ordering
+           ((settings.bus_mode & SPI_MASTER_MASK) << MSTR) | //set master/slave mode
+           ((settings.trans_mode & SPI_MODE_MASK) << CPHA) | //set mode
+           (settings.clock_rate & SPI_SPEED_MASK << SPR0) //set speed
          );
   //set double speed bit
-  SPSR = ((settings.double_clock  & __SPI_DBLCLK_MASK)<<SPI2X);
+  SPSR = ((settings.double_clock  & SPI_DBLCLK_MASK) << SPI2X);
 }
 
 //shifts out 8 bits of data
@@ -50,7 +50,7 @@ uint8_t spi_send(uint8_t value){
   //shift the first byte of the value
   SPDR = value;
   //wait for the SPI bus to finish
-  while(!(SPSR & (1<<SPIF)));
+  while(!(SPSR & _BV(SPIF)));
   //get the received data
   result = SPDR;
 

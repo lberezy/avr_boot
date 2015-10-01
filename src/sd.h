@@ -7,9 +7,7 @@
 #include "pfatfs/pff.h"
 #include "spi.h"
 
-#ifdef DEBUG
-#include "lcd.h"
-#endif
+#include "graphics.h"
 
 enum {
   SD_INIT_SUCCESS = 0,

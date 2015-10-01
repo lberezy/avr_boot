@@ -3,7 +3,7 @@
 
 
 /* select appropriate LCD controller */
-#include "PCD8544.h"
-//#include "UC1701.h"
+//#include "PCD8544.h"
+#include "UC1701.h"
 
 #endif

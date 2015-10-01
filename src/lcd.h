@@ -8,15 +8,11 @@
 #include "spi.h"
 #include "HAL/board.h"
 #include "buffer.h"
-/*#ifndef _LCD_CONTROLLER
-#error No LCD controller selected.`2`
-#endif*/
 
+/* standard interface that all LCD controllers must implement */
 void lcd_command(char c);
 void lcd_data(char c);
 void lcd_init(void);
 void lcd_fill(void);
-void set_led();
-
 
 #endif

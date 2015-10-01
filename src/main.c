@@ -41,21 +41,27 @@ int main(void)
   BACKLIGHT_LED_INIT();
   buttons_init();
   systick_init();
+  lcd_init();
   /*uint32_t curr_tick = global_tick;
   while(1) {
     buttons_poll();
-    if(global_tick > curr_tick + 20) {
-      curr_tick = global_tick;
-      USER_LED_TOGGLE();
-    }
+
   }*/
+  uint32_t curr_tick = global_tick;
   while(1) {
-    buttons_poll();
-    if(!!buttons_isset(BTN_B | BTN_A)) {
-      USER_LED_ON();
-    } else {
-      USER_LED_OFF();
+    if(global_tick > curr_tick + 2) {
+      curr_tick = global_tick;
+      buttons_poll();
+      if(!!buttons_isset(BTN_B | BTN_A)) {
+        USER_LED_ON();
+      } else {
+        USER_LED_OFF();
+      }
+      if(buttons_isset(BTN_UP)) {
+        USER_LED_OFF();
+      }
     }
+
   }
   /*if(!buttons_isset(BTN_A)) {
     while(1);

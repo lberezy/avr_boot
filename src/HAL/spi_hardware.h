@@ -4,18 +4,18 @@
 #include <avr/io.h>
 
 
-#define __SPI_PORT PORTB
-#define __SPI_PIN PINB
-#define __SPI_DDR DDRB
+#define SPI_PORT PORTB
+#define SPI_PIN PINB
+#define SPI_DDR DDRB
 
-static const uint8_t __SPI_MOSI = PB3;
-static const uint8_t __SPI_MISO = PB4;
-static const uint8_t __SPI_SCK = PB5;
-static const uint8_t __SPI_LSBFIRST_MASK = 0b00000001;
-static const uint8_t __SPI_MASTER_MASK = 0b00000001;
-static const uint8_t __SPI_MODE_MASK = 0b00000011;
-static const uint8_t __SPI_SPEED_MASK = 0b00000011;
-static const uint8_t __SPI_DBLCLK_MASK = 0b00000001;
+#define SPI_MOSI_PIN  PB5
+#define SPI_MISO_PIN PB6
+#define SPI_SCK_PIN PB7
+#define SPI_LSBFIRST_MASK 0b00000001
+#define SPI_MASTER_MASK 0b00000001
+#define SPI_MODE_MASK 0b00000011
+#define SPI_SPEED_MASK 0b00000011
+#define SPI_DBLCLK_MASK 0b00000001
 
 
 #endif
