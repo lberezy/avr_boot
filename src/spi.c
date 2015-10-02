@@ -1,6 +1,6 @@
 #include "spi.h"
 
-
+#include "led.h"
 
 //initialize the SPI bus
 //  uint8_t lsbfirst - if 0: most significant bit is transmitted first
@@ -22,10 +22,12 @@
 //  uint8_t dblclk - if 1: doubles the SPI clock rate in master mode
 //  EXAMPLE: spi_init(0, 1, 0, 3, 0)
 void spi_init(spi_setting_t settings) {
-  // enable pull-ups
-  SPI_PIN |= (_BV(SPI_MISO_PIN));
+
   //set outputs
   SPI_DDR |= (_BV(SPI_MOSI_PIN) | _BV(SPI_SCK_PIN));
+  SPI_DDR &= ~(_BV(SPI_MISO_PIN));
+  // enable pull-ups
+  SPI_PIN |= (_BV(SPI_MISO_PIN));
   //set inputs
   SPI_DDR &= ~_BV(SPI_MISO_PIN);
   SPI_PORT |= _BV(SPI_MISO_PIN); //turn on pull-up resistor
@@ -50,7 +52,9 @@ uint8_t spi_send(uint8_t value){
   //shift the first byte of the value
   SPDR = value;
   //wait for the SPI bus to finish
-  while(!(SPSR & _BV(SPIF)));
+  while(!(SPSR & _BV(SPIF))) {
+    // busy loop
+  };
   //get the received data
   result = SPDR;
 

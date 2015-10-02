@@ -37,19 +37,26 @@ int main(void)
   GICR = 1 << IVCE;
   GICR = 1 << IVSEL;
   sei();
+  DDRB |= _BV(PB4); // set CS to output
   USER_LED_INIT();
   BACKLIGHT_LED_INIT();
   buttons_init();
-  systick_init();
+  //systick_init();
   lcd_init();
+  while(1) {
+    lcd_draw_line(32,32,64,60);
+    lcd_fill();
+  }
   /*uint32_t curr_tick = global_tick;
   while(1) {
     buttons_poll();
 
   }*/
-  uint32_t curr_tick = global_tick;
+  /*uint32_t curr_tick = global_tick;
   while(1) {
     if(global_tick > curr_tick + 2) {
+      lcd_draw_line(8,8,32,32);
+      lcd_fill();
       curr_tick = global_tick;
       buttons_poll();
       if(!!buttons_isset(BTN_B | BTN_A)) {
@@ -61,8 +68,8 @@ int main(void)
         USER_LED_OFF();
       }
     }
-
-  }
+*/
+  //}
   /*if(!buttons_isset(BTN_A)) {
     while(1);
     //asm("ijmp" :: "z" (0x0));

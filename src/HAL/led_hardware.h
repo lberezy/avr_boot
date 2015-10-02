@@ -3,10 +3,10 @@
 
 #define USER_LED_PORT PORTC
 #define USER_LED_DDR  DDRC
-#define USER_LED_PIN  6
+#define USER_LED_PIN  PC6
 
 #define BACKLIGHT_LED_PORT  PORTD
 #define BACKLIGHT_LED_DDR   DDRD
-#define BACKLIGHT_LED_PIN   4
+#define BACKLIGHT_LED_PIN   PD4
 
 #endif
