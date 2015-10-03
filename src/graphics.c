@@ -1,5 +1,5 @@
 #include "graphics.h"
-
+#include <avr/pgmspace.h>
 
 void swap(uint8_t* a, uint8_t* b)
 {
@@ -66,7 +66,7 @@ void lcd_draw_char(uint8_t x, uint8_t line, char c)
 	/* Only works for fonts <= 8 bits in height */
 	for (uint8_t i = 0; i < FONT_GLYPH_WIDTH; i++ ) {
     // need to use pgm_read_byte to access font data
-    buffer.fb[x + (line * DISPLAY_WIDTH)] = font_data[ (((c - FONT_FIRST_ASCII) % FONT_LAST_ASCII) * (FONT_GLYPH_WIDTH)) + i  ];
+    buffer.fb[x + (line * DISPLAY_WIDTH)] = pgm_read_byte(&font_data[ (((c - FONT_FIRST_ASCII) % FONT_LAST_ASCII) * (FONT_GLYPH_WIDTH)) + i  ]);
     x++;
 	}
 }
@@ -85,5 +85,5 @@ void lcd_draw_string(uint8_t x, uint8_t line, char *str) {
 }
 
 void lcd_draw_point(uint8_t x, uint8_t y) {
-  buffer.fb[x + (y << 3) * DISPLAY_WIDTH] |= ( 1 << (y % 8));
+  buffer.fb[x + (y / 8) * DISPLAY_WIDTH] |= ( 1 << (y % 8));
 }

@@ -7,8 +7,8 @@
 
 
 typedef enum {
-  SPI_LSB_FIRST = 0,
-  SPI_MSB_FIRST = 1
+  SPI_LSB_FIRST = 1,
+  SPI_MSB_FIRST = 0
 } spi_endianness_t;
 typedef enum {
   SPI_BUSMODE_SLAVE = 0,

@@ -36,7 +36,7 @@ ISR(INT0_vect) {
   _buttons_scan();
 }
 
-static void _buttons_scan() {
+inline static void _buttons_scan() {
   // perform fresh scan
   buttons = 0;
   // scan buttons
