@@ -45,9 +45,10 @@ int main(void)
   DDRB |= _BV(PB4); // set CS to output
   USER_LED_INIT();
   BACKLIGHT_LED_INIT();
+  BACKLIGHT_LED_OFF();
   buttons_init();
   lcd_init();
-  fram_init();
+  //fram_init();
 
   systick_init();
   /*while(1) {
@@ -62,13 +63,21 @@ int main(void)
 
   uint32_t curr_tick = global_tick;
   while(1) {
+    lcd_fill();
+
     if(global_tick > curr_tick + 2) {
       //lcd_draw_line((uint8_t)rand() % 100, (uint8_t)rand() % 40, (uint8_t)rand() % 100, (uint8_t)rand() % 40);
-      lcd_draw_string(0,0,'a');
-      lcd_draw_string(0,2,'b');
-      lcd_draw_string(0,3,'c');
+      //lcd_draw_string(0,0,"1234\0");
+      //lcd_draw_string(0,1, "1234567890");
+      gfx_draw_string(0,0,"Get in bitches, we're going soldering!");
 
+      //lcd_draw_point(32,32);
+      //for (int i = 0; i < 32; i++) {
+      //  lcd_draw_point(i,i);
+      //lcd_draw_line(0,0,32,32);
       lcd_fill();
+
+
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         curr_tick = global_tick;
       }

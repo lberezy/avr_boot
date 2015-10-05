@@ -63,25 +63,50 @@ void lcd_draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 
 void lcd_draw_char(uint8_t x, uint8_t line, char c)
 {
+  if (x + FONT_GLYPH_WIDTH > DISPLAY_WIDTH  || line > DISPLAY_HEIGHT / 8) {
+    return;
+  }
 	/* Only works for fonts <= 8 bits in height */
 	for (uint8_t i = 0; i < FONT_GLYPH_WIDTH; i++ ) {
     // need to use pgm_read_byte to access font data
-    buffer.fb[x + (line * DISPLAY_WIDTH)] = pgm_read_byte(&font_data[ (((c - FONT_FIRST_ASCII) % FONT_LAST_ASCII) * (FONT_GLYPH_WIDTH)) + i  ]);
+    buffer.fb[x + (line * DISPLAY_WIDTH)] = pgm_read_byte(&font_data[ (((c - FONT_FIRST_ASCII)) * (FONT_GLYPH_WIDTH)) + i  ]);
     x++;
 	}
 }
+#include "led.h"``
+void gfx_draw_string(uint8_t x, uint8_t line, const char* str) {
+  uint8_t cursor_x = x;
+  uint8_t cursor_y = line;
+  while(*str != '\0') {
+    // test if character will fit, if not, wrap to next line
+    if ((cursor_x + FONT_GLYPH_WIDTH) > DISPLAY_WIDTH) {
+      if (cursor_y + 1 <= (DISPLAY_HEIGHT / 8)) {
+        cursor_y++;   //  move y cursor down one line
+        cursor_x = 0; // reset x cursor to start of new line
+      }
+    }
 
+    lcd_draw_char(cursor_x, cursor_y, *str);
+    cursor_x += 1 + FONT_GLYPH_WIDTH; // increment cursor pos by width of character + 1 pixel
+    str++; // increment string pointer
+  }
+}
 void lcd_draw_string(uint8_t x, uint8_t line, char *str) {
-	while (*str) {
-		lcd_draw_char(x, line, *str++);
-		x += (FONT_GLYPH_WIDTH + 1);
-		if ((x + FONT_GLYPH_WIDTH + 1) >= DISPLAY_WIDTH) {
-			x = 0; /* Ran out of this line */
-			line++;
-		}
-		if (line >= (DISPLAY_HEIGHT / (FONT_GLYPH_HEIGHT + 1)))
-			return; /* Ran out of space :( */
-	}
+  const uint8_t space_width = 1;
+  uint8_t str_pos = 0;
+  uint8_t x_pos = x;
+  uint8_t y_pos = line;
+	while (str[str_pos] != '\0') {
+    if ((x_pos + FONT_GLYPH_WIDTH + space_width) >= DISPLAY_WIDTH) {
+      x_pos = 0; /* Ran out of this line */
+      y_pos++;
+    }
+    if (y_pos >= (DISPLAY_HEIGHT / (FONT_GLYPH_HEIGHT)))
+      return; /* Ran out of space :( */
+  }
+		lcd_draw_char(x_pos, y_pos, str[str_pos]);
+		x_pos += (FONT_GLYPH_WIDTH + space_width); // incremement cursor
+    str_pos++;
 }
 
 void lcd_draw_point(uint8_t x, uint8_t y) {

@@ -100,4 +100,4 @@ const uint8_t font_5x7[] PROGMEM = {
   //0x08, 0x1C, 0x2A, 0x08, 0x08 // <-
 };
 
-const uint8_t* font_data = font_5x7;
+//const uint8_t* font_data = font_5x7;

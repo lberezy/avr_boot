@@ -43,7 +43,7 @@ uint8_t sd_init(void) {
     return SD_INIT_FAILURE;
   }
   _delay_ms(200);
-#if DEBUG
+#ifdef DEBUG
   lcd_draw_string(1,1, "Mounting");
   lcd_fill();
 #endif
@@ -57,8 +57,8 @@ uint8_t sd_init(void) {
   count  = 20;  // mounting tries before failure
   do {
     fs_result = pf_mount(fs);
-    switch(sd_status) {
     #ifdef DEBUG
+    switch(sd_status) {
       case FR_OK:
         lcd_draw_string(1,1, "Mount OK");
         break;

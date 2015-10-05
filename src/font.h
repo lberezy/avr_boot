@@ -10,7 +10,8 @@
 } font_t; */
 #include <stdint.h>
 /* defines global "font" variable */
-#include "fonts/font_5x7.h"
+//#include "fonts/font_5x7.h"
+#include "fonts/font_BMplain.h"
 const uint8_t* font_data;
 
 #endif
