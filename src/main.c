@@ -14,9 +14,11 @@
 #include "systick.h"
 #include "fram.h"
 
+#include "terminal.h"
 
 #include <avr/interrupt.h>
 #include <util/atomic.h>
+
 
 #define RESET_VECTOR() ((void(const *)(void))0)()
 
@@ -53,16 +55,18 @@ int main(void)
   fram_init();
   systick_init();
 
-
+  terminal_t term;
+  term.width = 102;
+  term.rows = 8;
+  term.buffer = &tb;
 
 
   uint32_t curr_tick = global_tick;
   while(1) {
     if(global_tick > curr_tick + 2) {
-      gfx_draw_string(0,0,"Test SD");
-      sd_init();
-      _delay_ms(200);
-      lcd_clear_buffer();
+      term_puts(&term, "test");
+      term_draw(&term);
+      lcd_fill();
       //lcd_fill();
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         curr_tick = global_tick;

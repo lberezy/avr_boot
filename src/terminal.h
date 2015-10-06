@@ -4,18 +4,21 @@
 #include "stdint.h"
 
 #include "buffer.h"
-
+#include "font.h"
 typedef struct {
   uint8_t scroll_x;
   uint8_t rows;
-  uint8_t cols;
+  uint8_t width;
   uint8_t cursor_x;
   uint8_t cursor_y;
-  char* buffer;
+  char** buffer;
 } terminal_t;
+
+static char tb[DISPLAY_HEIGHT / 8][DISPLAY_WIDTH / (FONT_GLYPH_WIDTH + 1)];
 
 terminal_t term_init(uint8_t width, uint8_t height);
 
 void term_putchar(terminal_t* term, char c);
-
+void term_puts(terminal_t* term, const char* str);
+void term_draw(terminal_t* term);
 #endif

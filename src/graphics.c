@@ -8,16 +8,6 @@ void swap(uint8_t* a, uint8_t* b)
     *b = temp;
 }
 
-void gfx_draw_term(terminal_t* term) {
-  // todo: handle \n
-  uint8_t max_rows = term->rows;
-  uint8_t cursor_current_col = term->cursor_y;
-  for(uint8_t y = 0; y < term->rows; y++) {
-      for (uint8_t x = 0; x < term->cols; x++) {
-        gfx_draw_char(x * FONT_GLYPH_WIDTH, (cursor_current_col + y) % max_rows, (term->buffer)[x + (cursor_current_col + y) % max_rows * max_rows]);
-      }
-  }
-}
 
 void gfx_draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 	uint8_t steep = abs(y1 - y0) > abs(x1 - x0);
