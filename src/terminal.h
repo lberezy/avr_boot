@@ -11,10 +11,9 @@ typedef struct {
   uint8_t width;
   uint8_t cursor_x;
   uint8_t cursor_y;
-  char** buffer;
+  char* buffer;
 } terminal_t;
 
-static char tb[DISPLAY_HEIGHT / 8][DISPLAY_WIDTH / (FONT_GLYPH_WIDTH + 1)];
 
 terminal_t term_init(uint8_t width, uint8_t height);
 

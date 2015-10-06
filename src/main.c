@@ -55,19 +55,24 @@ int main(void)
   fram_init();
   systick_init();
 
+
   terminal_t term;
-  term.width = 102;
-  term.rows = 8;
-  term.buffer = &tb;
+  term.width = 8;
+  term.rows = 5;
+  term.cursor_x = 0;
+  term.cursor_y = 0;
+  term.buffer = calloc((term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
 
-
+  term_puts(&term, "test");
+  term_draw(&term);
+  lcd_fill();
   uint32_t curr_tick = global_tick;
   while(1) {
     if(global_tick > curr_tick + 2) {
-      term_puts(&term, "test");
+      term_puts(&term, "0123456789");
       term_draw(&term);
       lcd_fill();
-      //lcd_fill();
+      lcd_clear_buffer();
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         curr_tick = global_tick;
       }

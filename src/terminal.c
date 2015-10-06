@@ -25,6 +25,10 @@ void term_draw(terminal_t* term) {
   uint8_t max_rows = term->rows;
   uint8_t cursor_current_col = term->cursor_y;
   for(uint8_t y = 0; y < term->rows; y++) {
-    gfx_draw_string(0,y,tb[((( cursor_current_col - y ) % max_rows) + max_rows) % max_rows]);
+    for(uint8_t x = 0; x < term->width; x++) {
+      gfx_draw_char(x * FONT_GLYPH_WIDTH, y, term->buffer[(y * (term->width)) + x ]);
+    }
+    //gfx_draw_string(0,y,&(term->buffer)[((( cursor_current_col - y ) % max_rows) + max_rows) % max_rows]);
+    //gfx_draw_string(0,y, term->buffer + (y * (term->width)));
   }
 }
