@@ -9,6 +9,7 @@
 #include "HAL/board.h"
 #include "buffer.h"
 
+#define LCD_CONTRAST 16
 /* standard interface that all LCD controllers must implement */
 void lcd_command(char c);
 void lcd_data(char c);
