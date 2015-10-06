@@ -7,5 +7,6 @@
 #include "spi_hardware.h"
 #include "timer_hardware.h"
 #include "fram_hardware.h"
+#include "sd_hardware.h"
 
 #endif

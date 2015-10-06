@@ -15,5 +15,5 @@ void lcd_command(char c);
 void lcd_data(char c);
 void lcd_init(void);
 void lcd_fill(void);
-
+void lcd_clear_buffer(void);
 #endif

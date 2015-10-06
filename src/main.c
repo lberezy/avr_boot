@@ -51,31 +51,19 @@ int main(void)
   /* peripheral init functions have side effects - SPI config */
   lcd_init();
   fram_init();
-
   systick_init();
 
+
+
+
   uint32_t curr_tick = global_tick;
-  char test_char = FONT_FIRST_ASCII;
-  uint8_t fram_result;
-  uint8_t test_addr = 0;
   while(1) {
     if(global_tick > curr_tick + 2) {
-      gfx_draw_string(test_addr % 3,7,"((VIBRATE))");
-      gfx_draw_string(0,6,"(0v0')");
-
-      gfx_draw_string(0,0,"Test FRAM");
-      gfx_draw_char(0,1,test_char);
-      fram_write_byte(test_addr, test_char);
-      fram_result = fram_read_byte(test_addr);
-      gfx_draw_char(0,2, (char)fram_result);
-      gfx_draw_string(0,4, ((char)fram_result == test_char) ? "PASS" : "FAIL");
-      test_char++;
-      test_addr++;
-      if (test_char > FONT_LAST_ASCII) {
-        test_char =  FONT_FIRST_ASCII;
-        test_addr = 0;
-      }
-      lcd_fill();
+      gfx_draw_string(0,0,"Test SD");
+      sd_init();
+      _delay_ms(200);
+      lcd_clear_buffer();
+      //lcd_fill();
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         curr_tick = global_tick;
       }

@@ -99,6 +99,14 @@ void lcd_fill(void) {
     for (uint8_t column = 0; column < DISPLAY_WIDTH; column++)
     {
       lcd_data(buffer.fb[(page * DISPLAY_WIDTH) + column]);
+    }
+  }
+}
+
+void lcd_clear_buffer(void) {
+  for (uint8_t page = 0; page < UC1701_NUM_PAGES; page++) {
+    for (uint8_t column = 0; column < DISPLAY_WIDTH; column++)
+    {
       buffer.fb[(page * DISPLAY_WIDTH) + column] = 0x00;
     }
   }

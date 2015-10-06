@@ -12,19 +12,12 @@
 
 #include <avr/io.h>			/* Device include file */
 #include <util/delay.h>
+#include "../HAL/board.h"
 
 
-#define SPI_CS PB2
-#define SPI_SCK PB5
-#define SPI_MISO PB4
-#define SPI_MOSI PB3
-#define SPI_PORT PORTB
-#define SPI_DDR DDRB
-#define SPI_PIN PINB
-
-#define SELECT()	(SPI_PORT &= ~_BV(SPI_CS)) /* CS = L */
-#define	DESELECT()	(SPI_PORT |= _BV(SPI_CS)) /* CS = H */
-#define	MMC_SEL		(!(SPI_PORT & _BV(SPI_CS))) /* CS status (true:CS == L) */
+#define SELECT()	SD_CS_ACTIVATE() /* CS = L */
+#define	DESELECT() SD_CS_DEACTIVATE() /* CS = H */
+#define	MMC_SEL		(!(SD_PORT & _BV(SD_CS_PIN))) /* CS status (true:CS == L) */
 /*#define	FORWARD(d)	uart_putc(d) // Data forwarding function (Console out in this example) */
 
 
@@ -120,8 +113,6 @@ DSTATUS disk_initialize (void)
 {
 	BYTE n, cmd, ty, ocr[4];
 	UINT tmr;
-
-	SPI_DDR |= _BV(SPI_CS);
 
 #if _USE_WRITE
 	if (CardType && MMC_SEL) disk_writep(0, 0);	/* Finalize write process if it is in progress */

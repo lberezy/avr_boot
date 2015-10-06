@@ -1,7 +1,7 @@
 #include "sd.h"
 #include "graphics.h"
 FATFS* fs;
-
+#define DEBUG
 uint8_t sd_init(void) {
   DSTATUS sd_status;
   FRESULT fs_result;
@@ -13,44 +13,38 @@ uint8_t sd_init(void) {
   spi_settings.double_clock =  SPI_DBLCLK_ENABLE;
   spi_init(spi_settings); // spi clk ~ 250 kHz
 
+	SD_PORT_INIT(); // from HAL/sd
+
   int count = 20;
   do {
     sd_status = disk_initialize();
   #ifdef DEBUG
-    switch(sd_status) {
-      case STA_NODISK:
-        lcd_draw_string(1,1, "No disk");
-        break;
-      case STA_NOINIT:
-        lcd_draw_string(1,1, "Not initialised");
-        break;
-      case (0x00):
-        lcd_draw_string(1,1, "Initialised successfully");
-        break;
-      default:
-        lcd_draw_string(1,1, "Initialisation error");
-        break;
+    if (sd_status & STA_NODISK) {
+      gfx_draw_string(0,1, "ND");
+    }
+    if (sd_status & STA_NOINIT) {
+      gfx_draw_string(40,1, "NOINIT");
     }
     lcd_fill();
   #endif
-  } while (!sd_status && count--);
+} while (!sd_status  && count--);
 
-  if (!sd_status || count == 0) {
+  /*if (!sd_status) {
   #ifdef DEBUG
-    lcd_draw_string(1,1, "SD failure");
+    gfx_draw_string(0,2, "SD failure");
     lcd_fill();
   #endif
     return SD_INIT_FAILURE;
-  }
-  _delay_ms(200);
+  }*/
+  //_delay_ms(200);
 #ifdef DEBUG
-  lcd_draw_string(1,1, "Mounting");
+  gfx_draw_string(0,3, "Mounting");
   lcd_fill();
 #endif
-  _delay_ms(50);
+  //_delay_ms(50);
 
   spi_settings.clock_rate = SPI_CLOCKDIV_4;
-  spi_settings.double_clock =SPI_DBLCLK_ENABLE;
+  spi_settings.double_clock = SPI_DBLCLK_ENABLE;
   spi_init(spi_settings);  // return to full speed spi
 
   /* Try to mount the SD card */
@@ -60,36 +54,35 @@ uint8_t sd_init(void) {
     #ifdef DEBUG
     switch(sd_status) {
       case FR_OK:
-        lcd_draw_string(1,1, "Mount OK");
+        gfx_draw_string(0,4, "Mount OK");
         break;
       case FR_NOT_READY:
-        lcd_draw_string(1,1, "Not ready");
+        gfx_draw_string(0,4, "Not ready");
         break;
       case FR_DISK_ERR:
-        lcd_draw_string(1,1, "Disk error");
+        gfx_draw_string(0,4, "Disk error");
         break;
       case FR_NO_FILESYSTEM:
-        lcd_draw_string(1,1, "No FS");
+        gfx_draw_string(0,4, "No FS");
         break;
       default:
-        lcd_draw_string(1,1, "Mount error");
+        gfx_draw_string(0,4, "Mount error");
         break;
     }
     lcd_fill();
   #endif
-    PORTD ^= 0xff;   // blink LED
-    _delay_ms(10);
-  } while (count-- > 0 && fs_result != FR_OK);
+    //_delay_ms(10);
+  } while ((count-- > 0) && fs_result != FR_OK);
 
-  _delay_ms(600);
+  //_delay_ms(600);
   if (fs_result != FR_OK) {
   #ifdef DEBUG
-    lcd_draw_string(1,1, "Mount failed.");
+    gfx_draw_string(0,5, "Mount failed.");
   #endif
     return SD_INIT_FAILURE;
   }
   #ifdef DEBUG
-  lcd_draw_string(1,1, "Mount success!");
+  gfx_draw_string(0,5, "Mount success!");
   lcd_fill();
   #endif
   return SD_INIT_SUCCESS;
@@ -113,7 +106,7 @@ FRESULT sd_scan_files (char* path) {
               lcd_putchar(path[j]);
             }
             lcd_putchar('/');
-            //lcd_draw_string(1,1,fno.fname);
+            //gfx_draw_string(1,1,fno.fname);
             while ((fno.fname[j++]) != '\0') {
               lcd_putchar(fno.fname[j]);
             }

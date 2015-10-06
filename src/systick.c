@@ -19,6 +19,5 @@ void systick_init() {
 }
 
 ISR(TIMER0_OVF_vect) {
-  //BACKLIGHT_LED_TOGGLE();
   global_tick++;
 }
