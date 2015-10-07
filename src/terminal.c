@@ -4,8 +4,7 @@
 
 
 void term_putchar(terminal_t* term, char c) {
-  // todo: handle \n
-  if (term->cursor_x > term->width) {
+  if (term->cursor_x > term->width || c == '\n') {
     term->cursor_x = 0;
     term->cursor_y = (term->cursor_y + 1) % term->width;
   }
@@ -24,11 +23,10 @@ void term_draw(terminal_t* term) {
   // todo: handle \n
   uint8_t max_rows = term->rows;
   uint8_t cursor_current_col = term->cursor_y;
-  for(uint8_t y = 0; y < term->rows; y++) {
+  for(uint8_t y = term->rows; y > 0;  y--) {
+    uint8_t scrolling_row = ((( cursor_current_col - y ) % max_rows) + max_rows) % max_rows;
     for(uint8_t x = 0; x < term->width; x++) {
-      gfx_draw_char(x * FONT_GLYPH_WIDTH, y, term->buffer[(y * (term->width)) + x ]);
+      gfx_draw_char(x * FONT_GLYPH_WIDTH, scrolling_row, term->buffer[(scrolling_row * (term->width)) + x ]);
     }
-    //gfx_draw_string(0,y,&(term->buffer)[((( cursor_current_col - y ) % max_rows) + max_rows) % max_rows]);
-    //gfx_draw_string(0,y, term->buffer + (y * (term->width)));
   }
 }

@@ -5,13 +5,15 @@
 
 #include "buffer.h"
 #include "font.h"
+// todo: add function pointer to read and write characters to term (for FRAM)
 typedef struct {
-  uint8_t scroll_x;
-  uint8_t rows;
-  uint8_t width;
-  uint8_t cursor_x;
-  uint8_t cursor_y;
-  char* buffer;
+  uint8_t scroll_x;   // scroll windows top position (in rows)
+  uint8_t rows;       // maximum number of character rows
+  uint8_t width;      // maximum characters per row
+  uint8_t view_rows;  // number of rows to render from scroll position
+  uint8_t cursor_x;   // character cursor position in current row
+  uint8_t cursor_y;   // current row of character cursor
+  char* buffer;       // storage space for term buffer
 } terminal_t;
 
 

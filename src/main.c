@@ -58,18 +58,20 @@ int main(void)
 
   terminal_t term;
   term.width = 8;
-  term.rows = 5;
+  term.rows = 8;
   term.cursor_x = 0;
   term.cursor_y = 0;
   term.buffer = calloc((term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
+  for (uint8_t i = 0; i < (term.width * term.rows); i++) {
+    term_putchar(&term, ' ');
+  }
 
-  term_puts(&term, "test");
   term_draw(&term);
   lcd_fill();
   uint32_t curr_tick = global_tick;
   while(1) {
-    if(global_tick > curr_tick + 2) {
-      term_puts(&term, "0123456789");
+    if(global_tick > curr_tick + 4) {
+      term_puts(&term, "12 ");
       term_draw(&term);
       lcd_fill();
       lcd_clear_buffer();
