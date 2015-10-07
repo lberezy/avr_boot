@@ -58,10 +58,10 @@ int main(void)
 
   terminal_t term;
   term.width = 8;
-  term.rows = 7;
+  term.rows = 5;
   term.cursor_x = 0;
   term.cursor_y = 0;
-  term.buffer = calloc((term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
+  term.buffer = calloc(1 + (term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
   for (uint8_t i = 0; i < (term.width * term.rows); i++) {
     term_putchar(&term, ' ');
   }
@@ -71,7 +71,7 @@ int main(void)
   uint32_t curr_tick = global_tick;
   while(1) {
     if(global_tick > curr_tick + 4) {
-      term_puts(&term, "12 ");
+      term_puts(&term, "DICKS! ");
       term_draw(&term);
       lcd_fill();
       lcd_clear_buffer();
