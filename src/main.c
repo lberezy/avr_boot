@@ -58,7 +58,7 @@ int main(void)
 
   terminal_t term;
   term.width = 8;
-  term.rows = 8;
+  term.rows = 7;
   term.cursor_x = 0;
   term.cursor_y = 0;
   term.buffer = calloc((term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
