@@ -3,17 +3,18 @@
 #include "graphics.h"
 
 #include <stdio.h>
+#include <avr/pgmspace.h>
 
-static int term_putchar_wrapper(char c, FILE* stream);
+int term_putchar_wrapper(char c, FILE* stream);
 static terminal_t* term_redirected;
 
 void term_redirect_putchar(terminal_t* term) {
   term_redirected = term;
-  FILE mystdout= FDEV_SETUP_STREAM(term_putchar_wrapper, NULL, _FDEV_SETUP_WRITE);
-  stdout = &mystdout;
+  fdev_setup_stream(stdout, term_putchar_wrapper, NULL, _FDEV_SETUP_WRITE);
+  //stdout = &mystdout;
 }
 
-static int term_putchar_wrapper(char c, FILE* stream) {
+int term_putchar_wrapper(char c, FILE* stream) {
   term_putchar(term_redirected, c);
   return 0;
 }
@@ -32,6 +33,13 @@ void term_putchar(terminal_t* term, char c) {
 void term_puts(terminal_t* term, const char* str) {
   while(*str) {
     term_putchar(term, *str++);
+  }
+}
+
+void term_puts_F(terminal_t* term, PGM_P str) {
+  char c;
+  while((c = pgm_read_byte(str++)) != '\0') {
+    term_putchar(term, c);
   }
 }
 

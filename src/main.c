@@ -18,6 +18,7 @@
 
 #include <avr/interrupt.h>
 #include <util/atomic.h>
+#include <stdio.h>
 
 
 #define RESET_VECTOR() ((void(const *)(void))0)()
@@ -57,26 +58,27 @@ int main(void)
 
 
   terminal_t term;
-  term.width = 7;
+  term.width = 5;
   term.rows = 5;
   term.cursor_x = 0;
   term.cursor_y = 0;
-  term.buffer = calloc(1 + (term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
+  term.buffer = calloc((term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
 
-  term_draw(&term);
-  lcd_fill();
+  term_redirect_putchar(&term);
   uint32_t curr_tick = global_tick;
   while(1) {
-    lcd_fill();
-    lcd_clear_buffer();
-
     if(global_tick > curr_tick ) {
+      term_draw(&term);
+      lcd_fill();
+      lcd_clear_buffer();
+
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         curr_tick = global_tick;
       }
       buttons_poll();
       if(!!buttons_isset(BTN_B | BTN_A)) {
         USER_LED_ON();
+        term_puts_F(&term, PSTR("abcd"));
       } else {
         USER_LED_OFF();
       }
