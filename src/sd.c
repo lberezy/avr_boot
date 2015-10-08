@@ -1,5 +1,6 @@
 #include "sd.h"
 #include "graphics.h"
+#include <stdio.h>
 FATFS* fs;
 #define DEBUG
 uint8_t sd_init(void) {
@@ -20,12 +21,12 @@ uint8_t sd_init(void) {
     sd_status = disk_initialize();
   #ifdef DEBUG
     if (sd_status & STA_NODISK) {
-      term_puts_P(term_redirected, PSTR("ND"));
+      puts_P(PSTR("ND"));
       //gfx_draw_string(0,1, "ND");
     }
     if (sd_status & STA_NOINIT) {
       //gfx_draw_string(40,1, "NOINIT");
-      term_puts_P(term_redirected, PSTR("NOINIT"));
+      puts_P(PSTR("NOINIT"));
     }
     lcd_fill();
   #endif
@@ -41,7 +42,7 @@ uint8_t sd_init(void) {
   //_delay_ms(200);
 #ifdef DEBUG
   //gfx_draw_string(0,3, "Mounting");
-  term_puts_P(term_redirected, PSTR("Mounting"));
+  puts_P(PSTR("Mounting"));
   lcd_fill();
 #endif
   //_delay_ms(50);
@@ -58,22 +59,22 @@ uint8_t sd_init(void) {
     switch(sd_status) {
       case FR_OK:
         //gfx_draw_string(0,4, "Mount OK");
-        term_puts_P(term_redirected, PSTR("Mount OK"));
+        puts_P(PSTR("Mount OK"));
 
         break;
       case FR_NOT_READY:
         //gfx_draw_string(0,4, "Not ready");
-        term_puts_P(term_redirected, PSTR("Not Ready"));
+        puts_P(PSTR("Not Ready"));
 
         break;
       case FR_DISK_ERR:
         //gfx_draw_string(0,4, "Disk error");
-        term_puts_P(term_redirected, PSTR("Disk Err."));
+        puts_P(PSTR("Disk Err."));
 
         break;
       case FR_NO_FILESYSTEM:
         //gfx_draw_string(0,4, "No FS");
-        term_puts_P(term_redirected, PSTR("No FS"));
+        puts_P(PSTR("No FS"));
 
         break;
       default:
@@ -89,14 +90,14 @@ uint8_t sd_init(void) {
   if (fs_result != FR_OK) {
   #ifdef DEBUG
     //gfx_draw_string(0,5, "Mount failed.");
-    term_puts_P(term_redirected, PSTR("Mount Failed"));
+    puts_P(PSTR("Mount Failed"));
 
   #endif
     return SD_INIT_FAILURE;
   }
   #ifdef DEBUG
   //gfx_draw_string(0,5, "Mount success!");
-  term_puts_P(term_redirected, PSTR("Mount success!"));
+  puts_P(PSTR("Mount success!"));
 
   lcd_fill();
   #endif
