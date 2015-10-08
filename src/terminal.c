@@ -3,10 +3,8 @@
 #include "graphics.h"
 
 #include <stdio.h>
-#include <avr/pgmspace.h>
 
 int term_putchar_wrapper(char c, FILE* stream);
-static terminal_t* term_redirected;
 
 void term_redirect_putchar(terminal_t* term) {
   term_redirected = term;
@@ -36,7 +34,7 @@ void term_puts(terminal_t* term, const char* str) {
   }
 }
 
-void term_puts_F(terminal_t* term, PGM_P str) {
+void term_puts_P(terminal_t* term, PGM_P str) {
   char c;
   while((c = pgm_read_byte(str++)) != '\0') {
     term_putchar(term, c);

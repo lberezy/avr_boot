@@ -20,10 +20,12 @@ uint8_t sd_init(void) {
     sd_status = disk_initialize();
   #ifdef DEBUG
     if (sd_status & STA_NODISK) {
-      gfx_draw_string(0,1, "ND");
+      term_puts_P(term_redirected, PSTR("ND"));
+      //gfx_draw_string(0,1, "ND");
     }
     if (sd_status & STA_NOINIT) {
-      gfx_draw_string(40,1, "NOINIT");
+      //gfx_draw_string(40,1, "NOINIT");
+      term_puts_P(term_redirected, PSTR("NOINIT"));
     }
     lcd_fill();
   #endif
@@ -38,7 +40,8 @@ uint8_t sd_init(void) {
   }*/
   //_delay_ms(200);
 #ifdef DEBUG
-  gfx_draw_string(0,3, "Mounting");
+  //gfx_draw_string(0,3, "Mounting");
+  term_puts_P(term_redirected, PSTR("Mounting"));
   lcd_fill();
 #endif
   //_delay_ms(50);
@@ -54,19 +57,27 @@ uint8_t sd_init(void) {
     #ifdef DEBUG
     switch(sd_status) {
       case FR_OK:
-        gfx_draw_string(0,4, "Mount OK");
+        //gfx_draw_string(0,4, "Mount OK");
+        term_puts_P(term_redirected, PSTR("Mount OK"));
+
         break;
       case FR_NOT_READY:
-        gfx_draw_string(0,4, "Not ready");
+        //gfx_draw_string(0,4, "Not ready");
+        term_puts_P(term_redirected, PSTR("Not Ready"));
+
         break;
       case FR_DISK_ERR:
-        gfx_draw_string(0,4, "Disk error");
+        //gfx_draw_string(0,4, "Disk error");
+        term_puts_P(term_redirected, PSTR("Disk Err."));
+
         break;
       case FR_NO_FILESYSTEM:
-        gfx_draw_string(0,4, "No FS");
+        //gfx_draw_string(0,4, "No FS");
+        term_puts_P(term_redirected, PSTR("No FS"));
+
         break;
       default:
-        gfx_draw_string(0,4, "Mount error");
+        //gfx_draw_string(0,4, "Mount error");
         break;
     }
     lcd_fill();
@@ -77,12 +88,16 @@ uint8_t sd_init(void) {
   //_delay_ms(600);
   if (fs_result != FR_OK) {
   #ifdef DEBUG
-    gfx_draw_string(0,5, "Mount failed.");
+    //gfx_draw_string(0,5, "Mount failed.");
+    term_puts_P(term_redirected, PSTR("Mount Failed"));
+
   #endif
     return SD_INIT_FAILURE;
   }
   #ifdef DEBUG
-  gfx_draw_string(0,5, "Mount success!");
+  //gfx_draw_string(0,5, "Mount success!");
+  term_puts_P(term_redirected, PSTR("Mount success!"));
+
   lcd_fill();
   #endif
   return SD_INIT_SUCCESS;

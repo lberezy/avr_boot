@@ -78,7 +78,7 @@ int main(void)
       buttons_poll();
       if(!!buttons_isset(BTN_B | BTN_A)) {
         USER_LED_ON();
-        term_puts_F(&term, PSTR("abcd"));
+        term_puts_P(&term, PSTR("abcd"));
       } else {
         USER_LED_OFF();
       }

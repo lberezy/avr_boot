@@ -19,12 +19,13 @@ typedef struct {
   char* buffer;       // storage space for term buffer
 } terminal_t;
 
+terminal_t* term_redirected;
 
 terminal_t term_init(uint8_t width, uint8_t height);
 
 void term_putchar(terminal_t* term, char c);
 void term_redirect_putchar(terminal_t* term);
 void term_puts(terminal_t* term, const char* str);
-void term_puts_F(terminal_t* term, PGM_P str);
+void term_puts_P(terminal_t* term, PGM_P str);
 void term_draw(terminal_t* term);
 #endif
