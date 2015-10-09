@@ -58,13 +58,15 @@ int main(void)
 
 
   terminal_t term;
-  term.width = 5;
-  term.rows = 5;
+  term.width = 16;
+  term.rows = 8;
   term.cursor_x = 0;
   term.cursor_y = 0;
-  term.buffer = calloc((term.rows) * (term.width / (FONT_GLYPH_WIDTH + 1)), sizeof(char));
+  char b[term.rows * term.width];
+  term.buffer = b;
 
   term_redirect_putchar(&term);
+
   uint32_t curr_tick = global_tick;
   while(1) {
     if(global_tick > curr_tick ) {
@@ -78,7 +80,8 @@ int main(void)
       buttons_poll();
       if(!!buttons_isset(BTN_B | BTN_A)) {
         USER_LED_ON();
-        term_puts_P(&term, PSTR("abcd"));
+        putchar('t');
+        //term_puts_P(&term, PSTR("abcd"));
       } else {
         USER_LED_OFF();
       }
