@@ -28,4 +28,5 @@ void term_redirect_putchar(terminal_t* term);
 void term_puts(terminal_t* term, const char* str);
 void term_puts_P(terminal_t* term, PGM_P str);
 void term_draw(terminal_t* term);
+void term_set_cursor(terminal_t* term, uint8_t cur_x, uint8_t cur_y);
 #endif

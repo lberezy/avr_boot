@@ -52,3 +52,8 @@ void term_draw(terminal_t* term) {
     }
   }
 }
+
+void term_set_cursor(terminal_t* term, uint8_t cur_x, uint8_t cur_y) {
+  term->cursor_y = cur_y;
+  term->cursor_x = cur_x;
+}
