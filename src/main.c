@@ -65,12 +65,22 @@ int main(void)
   char b[term.rows * term.width];
   term.buffer = b;
 
-  term_redirect_putchar(&term);
+  for(uint8_t i = 0; i < term.rows * term.width; i++) {
+    b[i] = 'X';
+  }
+  char test_char = FONT_FIRST_ASCII;
 
+  term_redirect_putchar(&term);
+  //sd_init();
   uint32_t curr_tick = global_tick;
   while(1) {
-    if(global_tick > curr_tick ) {
-      term_draw(&term);
+    if(global_tick > curr_tick + 10) {
+      puts_P(PSTR("Test FRAM\n"));
+      puts_P(PSTR("Tx: ")); putchar(test_char); putchar('\n');
+      fram_write_byte(0x00, test_char);
+      puts_P(PSTR("Rx: ")); putchar(fram_read_byte(0x00)); putchar('\n');
+
+      term_draw(term_redirected);
       lcd_fill();
       lcd_clear_buffer();
 
@@ -80,7 +90,7 @@ int main(void)
       buttons_poll();
       if(!!buttons_isset(BTN_B | BTN_A)) {
         USER_LED_ON();
-        putchar('t');
+        puts_P(PSTR("blah"));
         //term_puts_P(&term, PSTR("abcd"));
       } else {
         USER_LED_OFF();

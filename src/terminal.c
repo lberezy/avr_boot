@@ -8,7 +8,7 @@ int term_putchar_wrapper(char c, FILE* stream);
 
 void term_redirect_putchar(terminal_t* term) {
   term_redirected = term;
-  fdev_setup_stream(stdout, term_putchar_wrapper, NULL, _FDEV_SETUP_WRITE);
+  fdev_setup_stream(stdout, term_putchar_wrapper, NULL, _FDEV_SETUP_RW);
   //stdout = &mystdout;
 }
 

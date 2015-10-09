@@ -25,11 +25,10 @@ void buttons_init(void) {
   // enable pin-change interrupt (INT0, PD2)
   //SREG |= ; // enable global interrupts
   MCUCR |= _BV(ISC00); // interrupt on changing level
-  GICR |= _BV(INT0);  // enable INT0
+  GICR  |= _BV(INT0);  // enable INT0
   // allow polling
   buttons |= BTN_FLAG_POLLING;
   sei();
-
 }
 
 ISR(INT0_vect) {

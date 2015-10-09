@@ -24,9 +24,10 @@ void fram_init() {
   FRAM_SEND_WRITE_EN();
   // set up status register to renable writes
   SPI_SCK_LOW(); // FRAM decides if SPI is operating in mode 0 if SCK starts low
-  FRAM_CS_ACTIVATE();
-  spi_send(FRAM_WRITE_STATUS);
-  spi_send(FRAM_STATUS_WPEN); // enable writes, disable other protection
+  //FRAM_CS_DEACTIVATE();
+  //FRAM_CS_ACTIVATE();
+  //spi_send(FRAM_WRITE_STATUS);
+  //spi_send(FRAM_STATUS_WPEN); // enable writes, disable other protection
   FRAM_CS_DEACTIVATE();
 }
 
