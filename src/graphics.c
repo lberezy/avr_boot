@@ -1,6 +1,11 @@
 #include "graphics.h"
 #include <avr/pgmspace.h>
 
+#include "config.h"
+#include "fram.h"
+#include "buffer.h"
+
+
 void swap(uint8_t* a, uint8_t* b)
 {
     uint8_t temp = *a;
@@ -60,7 +65,7 @@ void gfx_draw_char(uint8_t x, uint8_t line, char c)
 	/* Only works for fonts <= 8 bits in height */
 	for (uint8_t i = 0; i < FONT_GLYPH_WIDTH; i++ ) {
     // need to use pgm_read_byte to access font data
-    buffer.fb[x + (line * DISPLAY_WIDTH)] |= pgm_read_byte(&font_data[ (((c - FONT_FIRST_ASCII)) * (FONT_GLYPH_WIDTH)) + i  ]);
+    BUFFER_SET_BYTE(x + (line * DISPLAY_WIDTH), BUFFER_GET_BYTE(x + (line * DISPLAY_WIDTH)) | pgm_read_byte(&font_data[ (((c - FONT_FIRST_ASCII)) * (FONT_GLYPH_WIDTH)) + i  ]));
     x++;
 	}
 }
@@ -86,5 +91,5 @@ void gfx_draw_string(uint8_t x, uint8_t line, const char* str) {
 }
 
 void gfx_draw_point(uint8_t x, uint8_t y) {
-  buffer.fb[x + (y / 8) * DISPLAY_WIDTH] |= ( 1 << (y % 8));
+  BUFFER_SET_BYTE(x + (y / 8) * DISPLAY_WIDTH, BUFFER_GET_BYTE(x + (y / 8) * DISPLAY_WIDTH) | ( 1 << (y % 8)));
 }

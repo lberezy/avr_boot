@@ -59,6 +59,7 @@
 #ifdef LCD_DRIVER
 
 #ifdef PCD8544
+/*
 #define LCD_PORT PORTB
 #define LCD_DDR DDRB
 
@@ -67,7 +68,7 @@
 #define LCD_DC_PIN PB1
 #define LCD_BACKLIGHT_PIN PB4
 
-#define LCD_CE_ACTIVATE() (LCD_PORT &= ~(_BV(LCD_CE_PIN))) /* active low */
+#define LCD_CE_ACTIVATE() (LCD_PORT &= ~(_BV(LCD_CE_PIN))) // active low
 #define LCD_CE_DEACTIVATE() (LCD_PORT |= _BV(LCD_CE_PIN))
 #define LCD_DC_DATA() (LCD_PORT |= _BV(LCD_DC_PIN))
 #define LCD_DC_COMM() (LCD_PORT &= ~(_BV(LCD_DC_PIN)))
@@ -107,7 +108,7 @@ void lcd_init(void) {
 
 void lcd_fill(void) {
   for (uint8_t bank = 0; bank < PCD8544_MAX_BANKS; bank++) {
-    /* Each bank is a single row 8 bits tall */
+    //Each bank is a single row 8 bits tall
     uint8_t column;
 
     lcd_command(PCD8544_SET_Y_ADDRESS | bank);
@@ -121,6 +122,7 @@ void lcd_fill(void) {
   }
 }
 #endif
+*/
 
 #undef LCD_DRIVER
 #endif

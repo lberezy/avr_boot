@@ -1,11 +1,13 @@
 #include "lcd.h"
 
+#include "buffer.h"
+#include "fram.h"
+
 #define stringify(x)  #x
 #define expand_and_stringify(x) stringify(x)
 
 #define LCD_DRIVER
 #include "HAL/UC1701.h"
-
 
 //#include "HAL/PCD8544.h"
 
@@ -98,7 +100,8 @@ void lcd_fill(void) {
     lcd_command(UC1701_SET_COL_ADDR_MSB | (offset & UC1701_SET_COL_MASK));
     for (uint8_t column = 0; column < DISPLAY_WIDTH; column++)
     {
-      lcd_data(buffer.fb[(page * DISPLAY_WIDTH) + column]);
+      //lcd_data(buffer.fb[(page * DISPLAY_WIDTH) + column]);
+      lcd_data(BUFFER_GET_BYTE((page * DISPLAY_WIDTH) + column));
     }
   }
 }
@@ -107,7 +110,7 @@ void lcd_clear_buffer(void) {
   for (uint8_t page = 0; page < UC1701_NUM_PAGES; page++) {
     for (uint8_t column = 0; column < DISPLAY_WIDTH; column++)
     {
-      buffer.fb[(page * DISPLAY_WIDTH) + column] = 0x00;
+      BUFFER_SET_BYTE((page * DISPLAY_WIDTH) + column, 0x00);
     }
   }
 }
