@@ -107,12 +107,16 @@ void lcd_fill(void) {
 }
 
 void lcd_clear_buffer(void) {
+#ifdef BUFFER_USE_SRAM
   for (uint8_t page = 0; page < UC1701_NUM_PAGES; page++) {
     for (uint8_t column = 0; column < DISPLAY_WIDTH; column++)
     {
       BUFFER_SET_BYTE((page * DISPLAY_WIDTH) + column, 0x00);
     }
   }
+#else
+  fram_clear_n_bytes( FRAM_FB_START, UC1701_NUM_PAGES * DISPLAY_WIDTH);
+#endif
 }
 
 #endif

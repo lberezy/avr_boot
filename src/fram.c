@@ -68,9 +68,9 @@ void fram_write_byte(uint16_t addr, uint8_t c) {
   FRAM_CS_ACTIVATE();
   spi_send(FRAM_WRITE_ENABLE);
   FRAM_CS_DEACTIVATE();
-_delay_us(100);
-FRAM_CS_ACTIVATE();
+  //_delay_us(100);
 
+  FRAM_CS_ACTIVATE();
   spi_send(FRAM_WRITE_MEMORY); // issue write opcode
   spi_send(addr >> 8); //& FRAM_MSB_MASK)); // send MSB of address
   spi_send(addr); //& 0xFF)); // send LSB of address
@@ -91,6 +91,21 @@ void fram_write_n_byte(uint16_t start_addr, uint16_t n, uint8_t* buff) {
   FRAM_CS_DEACTIVATE();
 }
 
+void fram_clear_n_bytes(uint16_t start_addr, uint16_t n) {
+  FRAM_CS_ACTIVATE();
+  spi_send(FRAM_WRITE_ENABLE);
+  FRAM_CS_DEACTIVATE();
+  //_delay_us(100);
+
+  FRAM_CS_ACTIVATE();
+  spi_send(FRAM_WRITE_MEMORY); // issue write opcode
+  spi_send(start_addr >> 8); //& FRAM_MSB_MASK)); // send MSB of address
+  spi_send(start_addr); //& 0xFF)); // send LSB of address
+  while(n-- > 0) {
+    spi_send(0x00); // clock out data byte
+  }
+  FRAM_CS_DEACTIVATE();
+}
 
 uint8_t fram_read_status() {
   uint8_t result;

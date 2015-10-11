@@ -74,7 +74,7 @@ int main(void)
   //sd_init();
   uint32_t curr_tick = global_tick;
   while(1) {
-    if(global_tick > curr_tick) {
+    if(1 || global_tick > curr_tick) {
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         fputs_P(PSTR("Test\n FRAM\n"), stdout);
         fputs_P(PSTR("Tx:"), stdout); putchar(test_char); putchar('\n');
