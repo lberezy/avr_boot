@@ -4,28 +4,39 @@
 
 #include <stdio.h>
 
-int term_putchar_wrapper(char c, FILE* stream);
+static int term_putchar_wrapper(char c, FILE* stream);
 
 void term_redirect_putchar(terminal_t* term) {
   term_redirected = term;
-  fdev_setup_stream(stdout, term_putchar_wrapper, NULL, _FDEV_SETUP_RW);
+  fdev_setup_stream(stdout, term_putchar_wrapper, NULL, _FDEV_SETUP_WRITE);
   //stdout = &mystdout;
 }
 
-int term_putchar_wrapper(char c, FILE* stream) {
+static int term_putchar_wrapper(char c, FILE* stream) {
   term_putchar(term_redirected, c);
   return 0;
 }
 
 
 void term_putchar(terminal_t* term, char c) {
-  if (term->cursor_x > term->width || c == '\n') {
+
+  if (c == '\n') {
+    term->cursor_y++;
+    term->cursor_y %= term->width;
+    term->cursor_x = 0;
+    return;
+  }
+
+  // check if character in font
+  if (c > FONT_LAST_ASCII || c < FONT_FIRST_ASCII) {
+    c = '?';
+  }
+  (term->buffer)[term->rows * term->cursor_y + term->cursor_x] = c;
+  (term->cursor_x)++;
+  if (term->cursor_x > term->width) {
     term->cursor_x = 0;
     term->cursor_y = (term->cursor_y + 1) % term->width;
   }
-  (term->buffer)[term->rows * term->cursor_y + term->cursor_x] = c;
-
-  (term->cursor_x)++;
 }
 
 void term_puts(terminal_t* term, const char* str) {
@@ -56,4 +67,16 @@ void term_draw(terminal_t* term) {
 void term_set_cursor(terminal_t* term, uint8_t cur_x, uint8_t cur_y) {
   term->cursor_y = cur_y;
   term->cursor_x = cur_x;
+}
+
+void term_clear(terminal_t* term) {
+  /*uint8_t max_rows = term->rows;
+  for(uint8_t y = 0; y < max_rows; y++) {
+    for(uint8_t x = 0; x < term->width; x++) {
+      (term->buffer)[(y * max_rows) + x] = ' ';
+    }
+  }*/
+  for (uint8_t i = 0; i < (term->rows * term->width); i++) {
+    (term->buffer)[i] = ' ';
+  }
 }

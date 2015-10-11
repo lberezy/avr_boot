@@ -57,10 +57,6 @@ void gfx_draw_char(uint8_t x, uint8_t line, char c)
   if (x + FONT_GLYPH_WIDTH > DISPLAY_WIDTH  || line > DISPLAY_HEIGHT / 8) {
     return;
   }
-  // check if character in font, else replace with space
-  if (c > FONT_LAST_ASCII || c < FONT_FIRST_ASCII) {
-    c = ' ';
-  }
 	/* Only works for fonts <= 8 bits in height */
 	for (uint8_t i = 0; i < FONT_GLYPH_WIDTH; i++ ) {
     // need to use pgm_read_byte to access font data

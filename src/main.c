@@ -58,45 +58,52 @@ int main(void)
 
 
   terminal_t term;
-  term.width = 16;
+  term.width = 17;
   term.rows = 8;
   term.cursor_x = 0;
   term.cursor_y = 0;
-  char b[term.rows * term.width];
-  term.buffer = b;
+  char buff[term.rows * term.width];
+  term.buffer = buff;
 
-  for(uint8_t i = 0; i < term.rows * term.width; i++) {
-    b[i] = 'X';
-  }
+  term_clear(&term);
   char test_char = FONT_FIRST_ASCII;
+  char test_result = test_char;
+  uint8_t test_addr = 0;
 
   term_redirect_putchar(&term);
   //sd_init();
   uint32_t curr_tick = global_tick;
   while(1) {
-    if(global_tick > curr_tick + 10) {
-      puts_P(PSTR("Test FRAM\n"));
-      puts_P(PSTR("Tx: ")); putchar(test_char); putchar('\n');
-      fram_write_byte(0x00, test_char);
-      puts_P(PSTR("Rx: ")); putchar(fram_read_byte(0x00)); putchar('\n');
-
-      term_draw(term_redirected);
-      lcd_fill();
-      lcd_clear_buffer();
-
+    if(global_tick > curr_tick) {
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+        fputs_P(PSTR("Test\n FRAM\n"), stdout);
+        fputs_P(PSTR("Tx:"), stdout); putchar(test_char); putchar('\n');
+        fram_write_byte(test_addr, test_char);
+        fputs_P(PSTR("Rx:"), stdout); putchar(test_result = (char)fram_read_byte(test_addr++)); putchar('\n');
+        if (test_char == FONT_LAST_ASCII) {
+          test_char = FONT_FIRST_ASCII;
+        }
+
+        term_draw(term_redirected);
+        term_set_cursor(term_redirected, 0, 0);
+        term_clear(term_redirected);
+        lcd_fill();
+        lcd_clear_buffer();
+
         curr_tick = global_tick;
-      }
-      buttons_poll();
-      if(!!buttons_isset(BTN_B | BTN_A)) {
-        USER_LED_ON();
-        puts_P(PSTR("blah"));
-        //term_puts_P(&term, PSTR("abcd"));
-      } else {
-        USER_LED_OFF();
-      }
-      if(buttons_isset(BTN_UP)) {
-        USER_LED_OFF();
+
+        buttons_poll();
+        if(!!buttons_isset(BTN_B | BTN_A) || (test_result == test_char)) {
+          USER_LED_ON();
+          fputs_P(PSTR("blah"), stdout);
+          //term_puts_P(&term, PSTR("abcd"));
+        } else {
+          USER_LED_OFF();
+        }
+        if(buttons_isset(BTN_UP)) {
+          USER_LED_OFF();
+        }
+        test_char++;
       }
     }
   }

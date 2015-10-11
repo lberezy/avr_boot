@@ -18,4 +18,8 @@ typedef union {
 
 volatile buffer_t buffer; // instantiate buffer in SRAM
 
+// buffer location in FRAM
+#define FRAM_FB_START   0x00;
+#define FRAM_FB_END     (FRAM_FB_START + FRAME_BUFFER_SIZE)
+
 #endif

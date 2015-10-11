@@ -47,8 +47,6 @@ void spi_init(spi_setting_t settings) {
 //  uint8_t data - the data to be shifted out
 //  returns uint8_t - the data received during sending
 uint8_t spi_send(uint8_t value){
-  uint8_t result;
-
   //shift the first byte of the value
   SPDR = value;
   //wait for the SPI bus to finish
@@ -56,7 +54,5 @@ uint8_t spi_send(uint8_t value){
     // busy loop
   };
   //get the received data
-  result = SPDR;
-
-  return result;
+  return SPDR;
 }

@@ -29,6 +29,6 @@
 
 #define FRAM_MSB_MASK       (0b00011111)
 
-#define FRAM_DUMMY_PACKET   0xff
+#define FRAM_DUMMY_PACKET   0x00
 
 #endif
