@@ -96,13 +96,24 @@ void lcd_fill(void) {
     //Each bank is a single row 8 bits tall
     /* No longer need to manually set page and reset column cursor - handled by lcd */
     lcd_command(UC1701_SET_PAGE_ADDR | ((page) & 0b00001111));
-    lcd_command(UC1701_SET_COL_ADDR_LSB | ((offset >> 4) & UC1701_SET_COL_MASK) );
-    lcd_command(UC1701_SET_COL_ADDR_MSB | (offset & UC1701_SET_COL_MASK));
-    for (uint8_t column = 0; column < DISPLAY_WIDTH; column++)
-    {
+    lcd_command(UC1701_SET_COL_ADDR_MSB | ((offset >> 4) & UC1701_SET_COL_MASK) );
+    lcd_command(UC1701_SET_COL_ADDR_LSB | (offset & UC1701_SET_COL_MASK));
+#ifdef GRAPHICS_USE_FRAM
+    fram_read_n_bytes(FRAM_FB_START + (DISPLAY_WIDTH * page), DISPLAY_WIDTH, buffer.pagebuffer);
+    LCD_DC_DATA();
+    LCD_CE_ACTIVATE();
+#endif
+    for (uint8_t column = 0; column < DISPLAY_WIDTH; column++) {
       //lcd_data(buffer.fb[(page * DISPLAY_WIDTH) + column]);
+#ifdef GRAPHICS_USE_FRAM
+      spi_send(buffer.pagebuffer[column]);
+#else
       lcd_data(BUFFER_GET_BYTE((page * DISPLAY_WIDTH) + column));
+#endif
     }
+#ifdef GRAPHICS_USE_FRAM
+    LCD_CE_DEACTIVATE();
+#endif
   }
 }
 

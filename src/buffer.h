@@ -14,6 +14,9 @@ typedef union {
 #ifdef GRAPHICS_USE_SRAM
   volatile uint8_t fb[FRAME_BUFFER_SIZE];
 #endif
+#ifdef GRAPHICS_USE_FRAM
+  volatile uint8_t pagebuffer[DISPLAY_WIDTH];
+#endif
   volatile uint8_t sd[SD_BUFFER_SIZE];
   volatile uint8_t flash_page[FLASH_BUFFER_SIZE];
 } buffer_t;
@@ -25,7 +28,6 @@ volatile buffer_t buffer; // instantiate buffer in SRAM
 #define FRAM_FB_END     (FRAM_FB_START + FRAME_BUFFER_SIZE)
 
 #ifdef GRAPHICS_USE_SRAM
-
   #define BUFFER_SET_BYTE(addr, b) (buffer.fb[(addr)] = (b))
   #define BUFFER_GET_BYTE(addr) (buffer.fb[(addr)])
 #endif

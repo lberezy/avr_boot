@@ -27,18 +27,14 @@ void fram_init() {
     FRAM_CS_ACTIVATE();
     spi_send(FRAM_WRITE_ENABLE);
     spi_send(FRAM_WRITE_STATUS);
-    spi_send(0x00); // enable writes, disable other protection
+    spi_send(0x00); // disable WPEN, BP1, BP0
     FRAM_CS_DEACTIVATE();
   }
-
 }
 
 uint8_t fram_read_byte(uint16_t addr) {
   uint8_t result;
-  //SPI_SCK_LOW(); // FRAM decides if SPI is operating in mode 0 if SCK starts low
-  //FRAM_CS_DEACTIVATE(); // ensure falling edge
   FRAM_CS_ACTIVATE();
-    //spi_send(FRAM_WRITE_ENABLE);
   spi_send(FRAM_READ_MEMORY); // issue read opcode
   spi_send(addr >> 8);// & FRAM_MSB_MASK)); // send MSB of address
   spi_send(addr); // send LSB of address
@@ -47,19 +43,15 @@ uint8_t fram_read_byte(uint16_t addr) {
   return result;
 }
 
-void fram_read_n_byte(uint16_t start_addr, uint16_t n, uint8_t* buff) {
-  //SPI_SCK_LOW(); // FRAM decides if SPI is operating in mode 0 if SCK starts low
-  //FRAM_CS_DEACTIVATE(); // ensure falling edge
+void fram_read_n_bytes(uint16_t start_addr, uint16_t n, uint8_t* buff) {
   FRAM_CS_ACTIVATE();
-spi_send(FRAM_WRITE_ENABLE);
   spi_send(FRAM_READ_MEMORY); // issue read opcode
-  spi_send((uint8_t)((start_addr >> 8) & FRAM_MSB_MASK)); // send MSB of address
-  spi_send((uint8_t)(start_addr & 0xFF)); // send LSB of address
+  spi_send(start_addr >> 8); //& FRAM_MSB_MASK)); // send MSB of address
+  spi_send(start_addr); //& 0xFF)); // send LSB of address
   for(uint16_t i = 0; i < n; i++) {
     buff[i] = spi_send(FRAM_DUMMY_PACKET); // issue 8 clocks to recieve data on
   }
   FRAM_CS_DEACTIVATE();
-
 }
 
 void fram_write_byte(uint16_t addr, uint8_t c) {
@@ -78,13 +70,15 @@ void fram_write_byte(uint16_t addr, uint8_t c) {
   FRAM_CS_DEACTIVATE();
 }
 
-void fram_write_n_byte(uint16_t start_addr, uint16_t n, uint8_t* buff) {
-  //FRAM_SEND_WRITE_EN();
-  //SPI_SCK_LOW(); // FRAM decides if SPI is operating in mode 0 if SCK starts low
+void fram_write_n_bytes(uint16_t start_addr, uint16_t n, uint8_t* buff) {
+  FRAM_CS_ACTIVATE();
+  spi_send(FRAM_WRITE_ENABLE);
+  FRAM_CS_DEACTIVATE();
+
   FRAM_CS_ACTIVATE();
   spi_send(FRAM_WRITE_MEMORY); // issue write opcode
-  spi_send((uint8_t)((start_addr >> 8) & FRAM_MSB_MASK)); // send MSB of address
-  spi_send((uint8_t)(start_addr & 0xFF)); // send LSB of address
+  spi_send(start_addr >> 8); //& FRAM_MSB_MASK)); // send MSB of address
+  spi_send(start_addr); //& 0xFF)); // send LSB of address
   for(uint16_t i = 0; i < n; i++) {
     spi_send(buff[i]); // clock out data byte
   }
