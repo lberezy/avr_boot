@@ -4,8 +4,9 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/io.h>
+#include <util/atomic.h>
 
-static void _buttons_scan();
+static inline void _buttons_scan();
 
 
 static volatile btn_state_t buttons;  // global button state
@@ -16,9 +17,11 @@ uint8_t buttons_isset(button_t button_mask) {
 
 void buttons_init(void) {
   // set inputs
+
   BTN_INPUT_DDR &= ~BTN_INPUT_MASK;
   BTN_DIR_DDR &= ~BTN_DIR_MASK;
   // enable internal pull-up resistors
+  DDRD |=
   BTN_INPUT_PORT |= BTN_INPUT_MASK;
   BTN_DIR_PORT |= BTN_DIR_MASK;
 
@@ -36,6 +39,8 @@ ISR(INT0_vect) {
 }
 
 inline static void _buttons_scan() {
+ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+
   // perform fresh scan
   buttons = 0;
   // scan buttons
@@ -48,6 +53,7 @@ inline static void _buttons_scan() {
   } else {
     buttons &= ~ BTN_FLAG_POLLING;
   }
+}
 }
 
 void buttons_poll(void) {

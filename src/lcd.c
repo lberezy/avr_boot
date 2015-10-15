@@ -11,7 +11,6 @@
 
 //#include "HAL/PCD8544.h"
 
-
 /****** BEGIN LCD DRIVER IMPLEMENTATION ******/
 
 #ifdef LCD_DRIVER
@@ -35,14 +34,17 @@
 
 #include "spi.h"
 
-void lcd_command(char c) {
+static inline void lcd_command(char c);
+static inline void lcd_data(char c);
+
+static inline void lcd_command(char c) {
   LCD_DC_COMM();
   LCD_CE_ACTIVATE();
   spi_send(c);
   LCD_CE_DEACTIVATE();
 }
 
-void lcd_data(char c) {
+static inline void lcd_data(char c) {
   LCD_DC_DATA();
   LCD_CE_ACTIVATE();
   spi_send(c);
@@ -57,12 +59,9 @@ void lcd_init(void) {
   spi_settings.trans_mode = SPI_MODE_0;
   spi_settings.clock_rate = SPI_CLOCKDIV_4;
   spi_settings.double_clock =  SPI_DBLCLK_ENABLE;
-  spi_init(spi_settings); // spi clk ~ 4 MHz
+  spi_init(&spi_settings); // spi clk ~ 4 MHz
 
-  _delay_ms(10);
   LCD_PORT_INIT();
-  LCD_RST_HIGH();
-
   LCD_CE_ACTIVATE();
   LCD_RST_HIGH();
   LCD_DC_COMM();
@@ -70,7 +69,7 @@ void lcd_init(void) {
   LCD_RST_LOW();
   _delay_ms(5); // delay required for RST procedure
   LCD_RST_HIGH();
-  _delay_ms(10); // delay required for RST procedure
+  //_delay_ms(10); // delay required for RST procedure
   lcd_command(UC1701_SET_SEG_DIR | UC1701_SET_SEG_DIR_MIRROR);  // reverse seg drivers
   lcd_command(UC1701_SET_COM_DIR | UC1701_SET_COM_DIR_NORM);
   lcd_command(UC1701_SET_ALL_PX | UC1701_SET_ALL_OFF);

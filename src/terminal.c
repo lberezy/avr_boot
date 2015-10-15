@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-static int term_putchar_wrapper(char c, FILE* stream);
+static inline int term_putchar_wrapper(char c, FILE* stream);
 
 void term_redirect_putchar(terminal_t* term) {
   term_redirected = term;
@@ -12,7 +12,7 @@ void term_redirect_putchar(terminal_t* term) {
   //stdout = &mystdout;
 }
 
-static int term_putchar_wrapper(char c, FILE* stream) {
+static inline int term_putchar_wrapper(char c, FILE* stream) {
   term_putchar(term_redirected, c);
   return 0;
 }

@@ -21,7 +21,7 @@
 //                    3      CPUCLK/128
 //  uint8_t dblclk - if 1: doubles the SPI clock rate in master mode
 //  EXAMPLE: spi_init(0, 1, 0, 3, 0)
-void spi_init(spi_setting_t settings) {
+void spi_init(spi_setting_t* settings) {
 
   //set outputs
   SPI_DDR |= (_BV(SPI_MOSI_PIN) | _BV(SPI_SCK_PIN));
@@ -34,13 +34,13 @@ void spi_init(spi_setting_t settings) {
   //set SPI control register
   SPCR = (
            _BV(SPE) | //enable SPI
-           ((settings.endianness & SPI_LSBFIRST_MASK) << DORD) | //set msb/lsb ordering
-           ((settings.bus_mode & SPI_MASTER_MASK) << MSTR) | //set master/slave mode
-           ((settings.trans_mode & SPI_MODE_MASK) << CPHA) | //set mode
-           (settings.clock_rate & SPI_SPEED_MASK << SPR0) //set speed
+           ((settings->endianness & SPI_LSBFIRST_MASK) << DORD) | //set msb/lsb ordering
+           ((settings->bus_mode & SPI_MASTER_MASK) << MSTR) | //set master/slave mode
+           ((settings->trans_mode & SPI_MODE_MASK) << CPHA) | //set mode
+           (settings->clock_rate & SPI_SPEED_MASK << SPR0) //set speed
          );
   //set double speed bit
-  SPSR = ((settings.double_clock  & SPI_DBLCLK_MASK) << SPI2X);
+  SPSR = ((settings->double_clock  & SPI_DBLCLK_MASK) << SPI2X);
 }
 
 //shifts out 8 bits of data

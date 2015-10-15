@@ -11,8 +11,6 @@
 
 #define LCD_CONTRAST 16
 /* standard interface that all LCD controllers must implement */
-void lcd_command(char c);
-void lcd_data(char c);
 void lcd_init(void);
 void lcd_fill(void);
 void lcd_clear_buffer(void);

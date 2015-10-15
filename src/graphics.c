@@ -6,6 +6,8 @@
 #include "buffer.h"
 
 
+static inline void swap(uint8_t* a, uint8_t* b);
+
 void swap(uint8_t* a, uint8_t* b)
 {
     uint8_t temp = *a;

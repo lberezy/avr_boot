@@ -43,7 +43,7 @@ union {
   uint8_t intRep;
 } spi_setting_t;
 
-void spi_init(spi_setting_t settings);
+void spi_init(spi_setting_t* settings);
 
 uint8_t spi_send(uint8_t value);
 

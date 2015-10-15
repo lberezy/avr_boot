@@ -16,7 +16,7 @@ void fram_init() {
   spi_settings.trans_mode = SPI_MODE_0;
   spi_settings.clock_rate = SPI_CLOCKDIV_4;
   spi_settings.double_clock =  SPI_DBLCLK_ENABLE;
-  spi_init(spi_settings); // spi clk (F_CPU / 2) ~= 4 MHz
+  spi_init(&spi_settings); // spi clk (F_CPU / 2) ~= 4 MHz
   // initialise FRAM control pins
   FRAM_PORT_INIT();
   //_delay_ms(20); // ensure t_PU is satisfied

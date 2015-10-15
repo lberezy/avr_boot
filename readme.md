@@ -15,4 +15,5 @@ this included library section.
 ## Hardware
 * ATMega16
 * MicroSD
-* SPI LCD
+* SPI LCD (DOGS6-102)
+* 16 Kb FRAM

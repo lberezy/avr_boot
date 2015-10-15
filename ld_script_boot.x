@@ -4,8 +4,8 @@ OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
 OUTPUT_ARCH(avr:5)
 MEMORY
 {
-  app       (rx)  : ORIGIN = 0, LENGTH = 6K
-  lib       (rx)  : ORIGIN = 6K , LENGTH = 8K
+  app       (rx)  : ORIGIN = 0, LENGTH = 9K
+  lib       (rx)  : ORIGIN = 9K , LENGTH = 5K
   boot      (rx)  : ORIGIN = 14K, LENGTH = 2K
 
   data      (rw!x) : ORIGIN = 0x800060, LENGTH = 0xffa0

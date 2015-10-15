@@ -12,7 +12,7 @@ uint8_t sd_init(void) {
   spi_settings.trans_mode = SPI_MODE_0;
   spi_settings.clock_rate = SPI_CLOCKDIV_64;
   spi_settings.double_clock =  SPI_DBLCLK_ENABLE;
-  spi_init(spi_settings); // spi clk ~ 250 kHz
+  spi_init(&spi_settings); // spi clk ~ 250 kHz
 
 	SD_PORT_INIT(); // from HAL/sd
 
@@ -54,7 +54,7 @@ uint8_t sd_init(void) {
 
   spi_settings.clock_rate = SPI_CLOCKDIV_4;
   spi_settings.double_clock = SPI_DBLCLK_ENABLE;
-  spi_init(spi_settings);  // return to full speed spi
+  spi_init(&spi_settings);  // return to full speed spi
 
   /* Try to mount the SD card */
   count  = 20;  // mounting tries before failure

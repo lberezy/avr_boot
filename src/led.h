@@ -13,4 +13,11 @@
 #define BACKLIGHT_LED_ON()      do{BACKLIGHT_LED_PORT |=  _BV(BACKLIGHT_LED_PIN);}while(0)
 #define BACKLIGHT_LED_OFF()     do{BACKLIGHT_LED_PORT &= ~_BV(BACKLIGHT_LED_PIN);}while(0)
 #define BACKLIGHT_LED_TOGGLE()  do{BACKLIGHT_LED_PORT ^=  _BV(BACKLIGHT_LED_PIN);}while(0)
+
+#define BACKLIGHT_PWM_MODE      (_BV(WGM20) | _BV(WGM21))   // fast PWM
+#define BACKLIGHT_PWM_OUTMODE   (_BV(COM21) | _BV(COM20))   // inverted output
+#define BACKLIGHT_PWM_CLOCK     (_BV(CS20)) // F_CPU / 2
+#define BACKLIGHT_PWM_LEVEL     OCR2
+// initialise backlight and set to half brightness
+#define BACKLIGHT_LED_PWM_INIT() do{TCCR2 |= (BACKLIGHT_PWM_MODE | BACKLIGHT_PWM_OUTMODE | BACKLIGHT_PWM_CLOCK); BACKLIGHT_PWM_LEVEL = 196;} while(0)
 #endif
