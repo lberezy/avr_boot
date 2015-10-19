@@ -2,6 +2,7 @@
 #define BUFFER_H
 
 #include <stdint.h>
+#include <avr/pgmspace.h>
 
 #include "config.h"
 #include "lcd.h"  // for display size constants
@@ -9,7 +10,7 @@
 
 #define FRAME_BUFFER_SIZE (DISPLAY_WIDTH * DISPLAY_HEIGHT / 8)
 
-#define FLASH_BUFFER_SIZE 64
+#define FLASH_BUFFER_SIZE SPM_PAGESIZE
 typedef union {
 #ifdef GRAPHICS_USE_SRAM
   volatile uint8_t fb[FRAME_BUFFER_SIZE];

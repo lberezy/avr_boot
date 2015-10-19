@@ -98,7 +98,7 @@ void lcd_fill(void) {
     lcd_command(UC1701_SET_COL_ADDR_MSB | ((offset >> 4) & UC1701_SET_COL_MASK) );
     lcd_command(UC1701_SET_COL_ADDR_LSB | (offset & UC1701_SET_COL_MASK));
 #ifdef GRAPHICS_USE_FRAM
-    fram_read_n_bytes(FRAM_FB_START + (DISPLAY_WIDTH * page), DISPLAY_WIDTH, buffer.pagebuffer);
+    fram_read_n_bytes(FRAM_FB_START + (DISPLAY_WIDTH * page), DISPLAY_WIDTH, (uint8_t*)buffer.pagebuffer);
     LCD_DC_DATA();
     LCD_CE_ACTIVATE();
 #endif

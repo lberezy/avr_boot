@@ -159,6 +159,8 @@ clean:
 	find . -name "*.map" -type f -delete
 	find . -name "*.syms" -type f -delete
 	find . -name "*.a" -type f -delete
+	find . -name "*.bin" -type f -delete
+
 
 squeaky_clean: | clean
 	rm -rf obj

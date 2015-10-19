@@ -101,4 +101,4 @@ const uint8_t font_BMplain[95][6] PROGMEM = {
 	//{0x00,0x00,0x00,0x00,0x00,0x00}
 };
 
-const uint8_t* font_data = font_BMplain;
+const uint8_t* font_data = (const uint8_t*)font_BMplain;

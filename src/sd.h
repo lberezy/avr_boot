@@ -11,9 +11,11 @@
 
 enum {
   SD_INIT_SUCCESS = 0,
-  SD_INIT_FAILURE = 1
+  SD_INIT_FAILURE,
+  SD_INIT_FAIL_INIT,
+  SD_INIT_FAIL_MOUNT,
 };
 
-uint8_t sd_init(void);
-FRESULT sd_scan_files (char* path);
+uint8_t sd_init(void) __attribute__((section(".boot")));
+FRESULT sd_scan_files (char* path) __attribute__((section(".boot")));
 #endif

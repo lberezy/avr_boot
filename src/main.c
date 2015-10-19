@@ -15,14 +15,13 @@
 #include "fram.h"
 #include "bootloader.h"
 #include "terminal.h"
+#include "config.h"
 
 #include <avr/interrupt.h>
 #include <util/atomic.h>
 #include <stdio.h>
 
-
-#define RESET_VECTOR() ((void(const *)(void))0)()
-
+#define DRAW_LOCAL_TERM() do{  term_draw(term_redirected);lcd_fill();lcd_clear_buffer();} while(0)
 
 __attribute__((section(".boot")))
 int main(void)
@@ -55,32 +54,46 @@ int main(void)
   term_clear(&term);
   term_redirect_putchar(&term);
 
-  fputs_P(PSTR("Bootloader"), stdout);
-  fputs_P(PSTR("File: test.bin"), stdout);
-  fputs_P(PSTR("Loading..."), stdout);
-  term_draw(term_redirected);
-  lcd_fill();
-  lcd_clear_buffer();
-  sd_init();
+  puts_P(PSTR("Bootloader"));
+  puts_P(PSTR("A: Flash"));
+  puts_P(PSTR("B: Boot"));
+  DRAW_LOCAL_TERM();
+  do {
+    buttons_poll();
+    if (buttons_isset(BTN_A)) {
+      goto do_flash;
+    }
+    if(buttons_isset(BTN_B)) {
+      goto do_boot;
+    }
+  } while(1);
 
-  flash_app("TEST.BIN");
-  fputs_P(PSTR("Done"), stdout);
-  term_draw(term_redirected);
-  lcd_fill();
-  lcd_clear_buffer();
+do_flash:
+  // init SD card
+  if(sd_init() != SD_INIT_SUCCESS) {
+    goto error;
+  }
+  // open app file to flash
+  if (pf_open(APP_FILENAME) != FR_OK) {
+    goto error;
+  }
+  // flash application
+  puts_P(PSTR("Flashing:"));
+  puts_P(PSTR(APP_FILENAME));
+  DRAW_LOCAL_TERM();
+  flash_app(APP_FILENAME);
 
+do_boot:
+  puts_P(PSTR("Booting!"));
+  DRAW_LOCAL_TERM();
+  _delay_ms(500);
+  //((void(*)(void))0)(); // boot application
+  asm("ijmp" :: "z" (0x0));
+
+error:
+  puts_P(PSTR("BOOT ERROR"));
   while(1) {
-    if(buttons_isset(BTN_B | BTN_A)) {
-      USER_LED_ON();
-      OCR2++;
-      //fputs_P(PSTR("blah"), stdout);
-      //term_puts_P(&term, PSTR("abcd"));
-    } else if (buttons_isset(BTN_UP)) {
-      USER_LED_OFF();
-    }
-    if(buttons_isset(BTN_UP)) {
-      USER_LED_OFF();
-    }
+    DRAW_LOCAL_TERM();
   }
 
 

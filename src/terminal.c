@@ -19,24 +19,34 @@ static inline int term_putchar_wrapper(char c, FILE* stream) {
 
 
 void term_putchar(terminal_t* term, char c) {
-
-  if (c == '\n') {
-    term->cursor_y++;
-    term->cursor_y %= term->width;
+  // handle explicit new line early
+  if (((term->cursor_x) >= term->width) || c == '\n') {
+    term->cursor_y = (term->cursor_y + 1) % term->rows;
     term->cursor_x = 0;
-    return;
+    if(term->cursor_x == 0) {
+      for(uint8_t x = 0; x < term->width; x++) {
+        (term->buffer)[(term->width * term->cursor_y) + x] = ' ';
+      }
+    }
+    if (c == '\n') {
+      return;
+    }
   }
+  // blank out new line
+
 
   // check if character in font
   if (c > FONT_LAST_ASCII || c < FONT_FIRST_ASCII) {
     c = '?';
   }
-  (term->buffer)[term->rows * term->cursor_y + term->cursor_x] = c;
+  // write character
+  (term->buffer)[(term->width * term->cursor_y) + term->cursor_x] = c;
+  // adjust cursor position
   (term->cursor_x)++;
-  if (term->cursor_x > term->width) {
-    term->cursor_x = 0;
-    term->cursor_y = (term->cursor_y + 1) % term->width;
-  }
+  ///if ((term->cursor_x) > term->width) {
+  //  term->cursor_x = 0;
+  //  term->cursor_y = (term->cursor_y + 1) % term->rows;
+  //}
 }
 
 void term_puts(terminal_t* term, const char* str) {
@@ -57,9 +67,13 @@ void term_draw(terminal_t* term) {
   uint8_t max_rows = term->rows;
   uint8_t cursor_current_col = term->cursor_y;
   for(uint8_t y = 0; y < max_rows;  y++) {
-    uint8_t scrolling_row = ((( cursor_current_col - y ) % max_rows) + max_rows) % max_rows;
+    //uint8_t scrolling_row = ((( cursor_current_col - y ) % max_rows) + max_rows) % max_rows;
+    //uint8_t scrolling_row = ((( cursor_current_col + y ) % max_rows) + max_rows) % max_rows;
+    uint8_t scrolling_row = ( cursor_current_col + y  + 1) % (max_rows);
+
     for(uint8_t x = 0; x < term->width; x++) {
-      gfx_draw_char(x * FONT_GLYPH_WIDTH, scrolling_row, term->buffer[(scrolling_row * (term->width)) + x ]);
+      gfx_draw_char(x * FONT_GLYPH_WIDTH, y, term->buffer[(scrolling_row * (term->width)) + x ]);
+      //gfx_draw_char(x*FONT_GLYPH_WIDTH, y, term->buffer[(y * term->width) + x]);
     }
   }
 }

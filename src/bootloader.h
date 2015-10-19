@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define APP_BYTES_MAX 8192
+#include "config.h"
 
 void flash_app(char* path) __attribute__((section(".boot")));
 
