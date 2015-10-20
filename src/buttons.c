@@ -38,6 +38,7 @@ ISR(INT0_vect) {
   _buttons_scan();
 }
 
+
 inline static void _buttons_scan() {
 ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 

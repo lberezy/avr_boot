@@ -18,7 +18,7 @@ stdin  = &uart_input;*/
 
 
 
-void gfx_draw_point(uint8_t x, uint8_t y);
+void gfx_draw_point(uint8_t x, uint8_t y) __attribute__((used));
 void gfx_draw_char(uint8_t x, uint8_t line, char c);
 void gfx_draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
 void gfx_putchar(char c);

@@ -20,4 +20,14 @@
 #define BACKLIGHT_PWM_LEVEL     OCR2
 // initialise backlight and set to half brightness
 #define BACKLIGHT_LED_PWM_INIT() do{TCCR2 |= (BACKLIGHT_PWM_MODE | BACKLIGHT_PWM_OUTMODE | BACKLIGHT_PWM_CLOCK); BACKLIGHT_PWM_LEVEL = 196;} while(0)
+
+void led_init(void);
+void led_user_on(void);
+void led_user_off(void);
+void led_user_toggle(void);
+void led_backlight_on(void);
+void led_backlight_off(void);
+void led_backlight_on(void);
+void led_backlight_level(uint8_t level);
+
 #endif

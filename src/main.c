@@ -22,20 +22,15 @@
 #include <stdio.h>
 
 #define DRAW_LOCAL_TERM() do{  term_draw(term_redirected);lcd_fill();lcd_clear_buffer();} while(0)
+#define MOVE_INT_VECT() do {  cli(); GICR = _BV(IVCE); GICR = _BV(IVSEL); sei();} while(0)
 
 __attribute__((section(".boot")))
 int main(void)
 {
-  cli();
-  GICR = 1 << IVCE;
-  GICR = 1 << IVSEL;
-  sei();
+  MOVE_INT_VECT();
   DDRB |= _BV(PB4); // set CS to output
   // Initialise modules
-  USER_LED_INIT();
-  BACKLIGHT_LED_INIT();
-  BACKLIGHT_LED_PWM_INIT();
-  //BACKLIGHT_LED_ON();
+  led_init();
   buttons_init();
   /* peripheral init functions have side effects - SPI config */
   lcd_init();
@@ -87,6 +82,7 @@ do_boot:
   puts_P(PSTR("Booting!"));
   DRAW_LOCAL_TERM();
   _delay_ms(500);
+  cli(); // disable interrupts
   //((void(*)(void))0)(); // boot application
   asm("ijmp" :: "z" (0x0));
 
@@ -95,16 +91,4 @@ error:
   while(1) {
     DRAW_LOCAL_TERM();
   }
-
-
-
-  /*if(!buttons_isset(BTN_A)) {
-    while(1);
-    //asm("ijmp" :: "z" (0x0));
-  } else {
-    boot_interactive();
-  }*/
-  // perform SD loader
-
-  // wait for watchdog to time out and reset system
 }

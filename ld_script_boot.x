@@ -4,8 +4,8 @@ OUTPUT_FORMAT("elf32-avr","elf32-avr","elf32-avr")
 OUTPUT_ARCH(avr:5)
 MEMORY
 {
-  app       (rx)  : ORIGIN = 0, LENGTH = 8704
-  lib       (rx)  : ORIGIN = 8704 , LENGTH = 5632
+  app       (rx)  : ORIGIN = 0, LENGTH = 7K
+  lib       (rx)  : ORIGIN = 7K , LENGTH = 7K
   boot      (rx)  : ORIGIN = 14K, LENGTH = 2K
 
   data      (rw!x) : ORIGIN = 0x800060, LENGTH = 0xffa0
@@ -83,6 +83,7 @@ SECTIONS
     *(.library)
     KEEP(*(.library))
     *(.text.*)
+    KEEP  (*(.text.*))
    . = ALIGN(2);
   } > lib
 
@@ -140,8 +141,10 @@ SECTIONS
     *(.init9)  /* Call main().  */
     KEEP (*(.init9))
     *(.text)
+    KEEP (*(.text))
     . = ALIGN(2);
     *(.boot)
+    KEEP (*(.boot))
     . = ALIGN(2);
     *(.fini9)  /* _exit() starts here.  */
     KEEP (*(.fini9))

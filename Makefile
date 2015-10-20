@@ -68,12 +68,12 @@ HEADERS=$(SOURCES:.c=.h)
 
 ## Compilation options, type man avr-gcc if you're curious.
 CPPFLAGS = -DF_CPU=$(F_CPU) -DBAUD=$(BAUD) -I. -I$(LIBDIR) -MP -MD
-CFLAGS = -Os -std=gnu99 -Wall -flto ## ADDED
+CFLAGS = -Os -std=gnu99 -Wall ## ADDED
 ## CFLAGS += -DDEBUG
 ## Use short (8-bit) data types
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -fms-extensions
-CFLAGS += -finline-functions -ffreestanding -mcall-prologues  -fno-tree-scev-cprop -fno-split-wide-types ## --combine -fwhole-program
+##CFLAGS += -finline-functions -ffreestanding -mcall-prologues  -fno-tree-scev-cprop -fno-split-wide-types ## --combine -fwhole-program
 ## Splits up object files per function
 CFLAGS += -ffunction-sections -fdata-sections
 LDFLAGS = -Wl,-Map,$(TARGET).map
@@ -107,9 +107,10 @@ obj/%.o: src/%.c # src/$(HEADERS)
 	@echo "Making: " $@
 	 $(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c -o $@ $<;
 
-$(TARGET).elf: $(SOURCES) ##$(OBJECTS)
-	##$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
-	$(CC) -o $@ $^ $(LDFLAGS) $(TARGET_ARCH) $(LDLIBS) $(CFLAGS) $(CPPFLAGS)
+$(TARGET).elf: $(OBJECTS) ##$(OBJECTS)
+	$(CC) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@
+##	$(CC)  $^ $(LDFLAGS) $(TARGET_ARCH) $(LDLIBS) $(CFLAGS) $(CPPFLAGS) -o $@
+
 %.hex: %.elf
 	$(OBJCOPY)  -O ihex $< $@
 
