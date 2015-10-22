@@ -17,22 +17,19 @@ void swap(uint8_t* a, uint8_t* b)
 
 
 void gfx_draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
-	uint8_t steep = abs(y1 - y0) > abs(x1 - x0);
+  //Bresenham's line algorithm
+  uint8_t steep = abs(y1 - y0) > abs(x1 - x0);
 	uint8_t dx, dy;
 	int8_t err;
 	int8_t ystep;
-
 	if (steep) {
 		swap(&x0, &y0);
 		swap(&x1, &y1);
 	}
-
 	if (x0 > x1) {
 		swap(&x0, &x1);
 		swap(&y0, &y1);
 	}
-
-
 	dx = x1 - x0;
 	dy = abs(y1 - y0);
 

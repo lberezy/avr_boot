@@ -37,7 +37,7 @@ void term_putchar(terminal_t* term, char c) {
 
   // check if character in font
   if (c > FONT_LAST_ASCII || c < FONT_FIRST_ASCII) {
-    c = '?';
+    c = UNKNOWN_CHAR;
   }
   // write character
   (term->buffer)[(term->width * term->cursor_y) + term->cursor_x] = c;
@@ -63,7 +63,6 @@ void term_puts_P(terminal_t* term, PGM_P str) {
 }
 
 void term_draw(terminal_t* term) {
-  // todo: handle \n
   uint8_t max_rows = term->rows;
   uint8_t cursor_current_col = term->cursor_y;
   for(uint8_t y = 0; y < max_rows;  y++) {

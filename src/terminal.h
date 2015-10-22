@@ -8,6 +8,7 @@
 
 #include <avr/pgmspace.h>
 
+#define UNKNOWN_CHAR '?'
 // todo: add function pointer to read and write characters to term (for FRAM)
 typedef struct {
   uint8_t scroll_x;   // scroll windows top position (in rows)

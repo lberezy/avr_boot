@@ -8,5 +8,6 @@
 #include "timer_hardware.h"
 #include "fram_hardware.h"
 #include "sd_hardware.h"
+#include "adc_hardware.h"
 
 #endif

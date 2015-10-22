@@ -27,7 +27,7 @@ void fram_init() {
     FRAM_CS_ACTIVATE();
     spi_send(FRAM_WRITE_ENABLE);
     spi_send(FRAM_WRITE_STATUS);
-    spi_send(0x00); // disable WPEN, BP1, BP0
+    spi_send(0); // disable WPEN, BP1, BP0
     FRAM_CS_DEACTIVATE();
   }
 }
@@ -96,7 +96,7 @@ void fram_clear_n_bytes(uint16_t start_addr, uint16_t n) {
   spi_send(start_addr >> 8); //& FRAM_MSB_MASK)); // send MSB of address
   spi_send(start_addr); //& 0xFF)); // send LSB of address
   while(n-- > 0) {
-    spi_send(0x00); // clock out data byte
+    spi_send(0); // clock out data byte
   }
   FRAM_CS_DEACTIVATE();
 }
@@ -105,7 +105,7 @@ uint8_t fram_read_status() {
   uint8_t result;
   FRAM_CS_ACTIVATE();
   spi_send(FRAM_READ_STATUS);
-  result = spi_send(0x00);
+  result = spi_send(0);
   FRAM_CS_DEACTIVATE();
   return result;
 }

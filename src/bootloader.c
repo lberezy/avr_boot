@@ -16,8 +16,8 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
-void boot_program_page (uint32_t page, uint8_t *buf)
-{
+#define LED_DELAY 10
+void boot_program_page (uint32_t page, uint8_t *buf) {
   uint16_t i;
   uint8_t sreg;
   // Disable interrupts.
@@ -45,9 +45,7 @@ void boot_program_page (uint32_t page, uint8_t *buf)
 void flash_app(char* path) {
   //ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
     uint8_t pagebuffer[SPM_PAGESIZE];
-    uint8_t flash_page = 0;
     UINT bytes_read = 0;
-    uint16_t total_bytes = 0;
     FRESULT result = pf_open(path);
     if(result != FR_OK) {
       return;
@@ -64,31 +62,6 @@ void flash_app(char* path) {
         boot_program_page(addr, pagebuffer);
       }
       USER_LED_TOGGLE();
-      _delay_ms(40);
-    //}
-    /*do {
-      // fill buffer from file
-      pf_read((void *)buffer.sd, SPM_PAGESIZE, &bytes_read);
-      uint8_t bytes_remaining = bytes_read;
-      // process portions of file buffer into flash buffer and write flash buffer
-      uint8_t buff_pt = 0;
-      do {
-        // take SPM_PAGESIZE or remaining bytes from buffer
-        boot_page_erase (flash_page);
-        boot_spm_busy_wait();
-        for (uint8_t i = 0; (i < SPM_PAGESIZE) && (bytes_remaining >= 2); i += 2) {
-          bytes_remaining -= 2;
-          // fill buffer with word
-          uint16_t w = buffer.sd[buff_pt++];
-          w += (buffer.sd[buff_pt++]) << 8;
-          boot_page_fill ((flash_page * SPM_PAGESIZE) + i, w);
-          total_bytes += 2;
-        }
-        boot_page_write(flash_page * SPM_PAGESIZE);
-        boot_spm_busy_wait();
-        flash_page++;
-      } while(bytes_remaining);
-    } while (bytes_read == SD_BUFFER_SIZE && (total_bytes <= APP_BYTES_MAX));*/
-    //boot_rww_enable();  // enable jumping to flashed application
+      _delay_ms(LED_DELAY);
   }
 }

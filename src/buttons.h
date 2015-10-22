@@ -18,7 +18,7 @@ typedef enum {
   BTN_A             = BTN_A_PIN,
   BTN_B             = BTN_B_PIN,
   BTN_UP            = BTN_UP_PIN,
-  BTN_DOWN          = BTN_UP_PIN,
+  BTN_DOWN          = BTN_DOWN_PIN,
   BTN_LEFT          = BTN_LEFT_PIN,
   BTN_RIGHT         = BTN_RIGHT_PIN,
   BTN_FLAG_POLLING  = _BV(BTN_FLAG_BITPOS)
